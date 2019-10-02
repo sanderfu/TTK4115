@@ -32,7 +32,7 @@ k_1 = k_f/(2*m_p*l_p); %
 k_2 = (l_h*k_f)/(m_c*l_c^2+2*m_p*l_h^2); 
 k_3 = (v_s0*l_h*k_f)/(m_c*l_c^2+2*m_p*(l_h^2+l_p^2));
 
-omega_0 = 2;
+omega_0 = -2;
 zeta = 1;
 
 k_pp = omega_0^2/k_1;
