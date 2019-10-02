@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.68
+ * Model version              : 1.69
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Wed Sep 18 15:59:20 2019
+ * C source code generated on : Wed Oct 02 10:13:23 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -26,8 +26,8 @@ P_heli_q8_T heli_q8_P = {
   /*  Variable: F_aug
    * Referenced by: '<S7>/Gain'
    */
-  { 3.7562344498008156E-16, 12.769674757744145, 3.1634846265711718,
-    1.1380249632730107E-15 },
+  { 9.30636361796939E-17, 12.769674757744109, 12.409169165124739,
+    -1.1774349904897114E-15 },
   1.0,                                 /* Variable: Joystick_gain_x
                                         * Referenced by: '<S5>/Joystick_gain_x'
                                         */
@@ -38,10 +38,10 @@ P_heli_q8_T heli_q8_P = {
   /*  Variable: K_aug
    * Referenced by: '<S7>/Gain1'
    */
-  { 3.7562344498008151E-16, 12.769674757744145, 1.8313470637845914E-16,
-    7.0508358928651873, 3.1634846265711718, 1.1380249632730109E-15,
-    -5.6857953309472485E-17, 4.4721359549995832, 0.00031622776601683745,
-    2.9092483645340055E-18 },
+  { 9.306363617969387E-17, 12.769674757744108, -1.894766971041635E-16,
+    7.0508358928651678, 12.409169165124739, -1.1774349904897112E-15,
+    1.6756611163705159E-16, 4.4721359549995743, 2.2360679774997863,
+    5.2232485710389824E-16 },
   0.51475796930342466,                 /* Variable: k_1
                                         * Referenced by: '<S6>/Gain'
                                         */
@@ -293,11 +293,17 @@ P_heli_q8_T heli_q8_P = {
   1.1111111111111112,                  /* Expression: 10/9
                                         * Referenced by: '<S5>/Gain: y'
                                         */
-  -0.515,                              /* Expression: -0.515
-                                        * Referenced by: '<Root>/elevation offset'
-                                        */
   -0.0015339807878856412,              /* Expression: -2 * pi /4096
                                         * Referenced by: '<S4>/Elevation: Count to rad'
+                                        */
+  -50.0,                               /* Computed Parameter: ElevationTransferFcn_A
+                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
+                                        */
+  -2500.0,                             /* Computed Parameter: ElevationTransferFcn_C
+                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
+                                        */
+  50.0,                                /* Computed Parameter: ElevationTransferFcn_D
+                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
                                         */
   0.5,                                 /* Expression: 0.5
                                         * Referenced by: '<Root>/Pulse Generator'
@@ -329,6 +335,9 @@ P_heli_q8_T heli_q8_P = {
   -0.0015339807878856412,              /* Expression: -2*pi /4096
                                         * Referenced by: '<S4>/Pitch: Count to rad'
                                         */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<Root>/Constant2'
+                                        */
   -50.0,                               /* Computed Parameter: PitchTransferFcn_A
                                         * Referenced by: '<S4>/Pitch: Transfer Fcn'
                                         */
@@ -338,32 +347,20 @@ P_heli_q8_T heli_q8_P = {
   50.0,                                /* Computed Parameter: PitchTransferFcn_D
                                         * Referenced by: '<S4>/Pitch: Transfer Fcn'
                                         */
-  -50.0,                               /* Computed Parameter: ElevationTransferFcn_A
-                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
-                                        */
-  -2500.0,                             /* Computed Parameter: ElevationTransferFcn_C
-                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
-                                        */
-  50.0,                                /* Computed Parameter: ElevationTransferFcn_D
-                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
-                                        */
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S7>/Integrator'
                                         */
-  -1.0,                                /* Expression: -1
-                                        * Referenced by: '<S7>/Gain2'
-                                        */
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S7>/Integrator1'
-                                        */
-  -1.0,                                /* Expression: -1
-                                        * Referenced by: '<S7>/Gain3'
                                         */
   0.5,                                 /* Expression: 0.5
                                         * Referenced by: '<S1>/Front gain'
                                         */
   0.5,                                 /* Expression: 0.5
                                         * Referenced by: '<S1>/Back gain'
+                                        */
+  -0.515,                              /* Expression: -0.515
+                                        * Referenced by: '<Root>/elevation offset'
                                         */
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<Root>/Constant'

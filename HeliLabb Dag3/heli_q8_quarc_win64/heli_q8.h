@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.68
+ * Model version              : 1.69
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Wed Sep 18 15:59:20 2019
+ * C source code generated on : Wed Oct 02 10:13:23 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -827,13 +827,12 @@ typedef struct {
   real_T RateTransitiony;              /* '<S5>/Rate Transition: y' */
   real_T Joystick_gain_y;              /* '<S5>/Joystick_gain_y' */
   real_T ElevationCounttorad;          /* '<S4>/Elevation: Count to rad' */
-  real_T Add;                          /* '<Root>/Add' */
+  real_T ElevationTransferFcn;         /* '<S4>/Elevation: Transfer Fcn' */
   real_T Sum1;                         /* '<Root>/Sum1' */
   real_T PitchCounttorad;              /* '<S4>/Pitch: Count to rad' */
-  real_T Gain[2];                      /* '<S7>/Gain' */
+  real_T Constant2;                    /* '<Root>/Constant2' */
   real_T PitchTransferFcn;             /* '<S4>/Pitch: Transfer Fcn' */
-  real_T ElevationTransferFcn;         /* '<S4>/Elevation: Transfer Fcn' */
-  real_T Constant2;                    /* '<S7>/Constant2' */
+  real_T Constant2_k;                  /* '<S7>/Constant2' */
   real_T Frontgain;                    /* '<S1>/Front gain' */
   real_T Backgain;                     /* '<S1>/Back gain' */
   real_T Constant3;                    /* '<Root>/Constant3' */
@@ -847,7 +846,7 @@ typedef struct {
   real_T Joystick_gain_x;              /* '<S5>/Joystick_gain_x' */
   real_T GameController_o4;            /* '<S5>/Game Controller' */
   real_T GameController_o5;            /* '<S5>/Game Controller' */
-  real_T Gain_o;                       /* '<S8>/Gain' */
+  real_T Gain;                         /* '<S8>/Gain' */
   real_T Gain_k;                       /* '<S6>/Gain' */
   real_T Gain2;                        /* '<S6>/Gain2' */
   real_T Integrator;                   /* '<S6>/Integrator' */
@@ -934,8 +933,8 @@ typedef struct {
 
 /* Continuous states (auto storage) */
 typedef struct {
-  real_T PitchTransferFcn_CSTATE;      /* '<S4>/Pitch: Transfer Fcn' */
   real_T ElevationTransferFcn_CSTATE;  /* '<S4>/Elevation: Transfer Fcn' */
+  real_T PitchTransferFcn_CSTATE;      /* '<S4>/Pitch: Transfer Fcn' */
   real_T Integrator_CSTATE;            /* '<S7>/Integrator' */
   real_T Integrator1_CSTATE;           /* '<S7>/Integrator1' */
   real_T Integrator_CSTATE_n;          /* '<S10>/Integrator' */
@@ -950,8 +949,8 @@ typedef struct {
 
 /* State derivatives (auto storage) */
 typedef struct {
-  real_T PitchTransferFcn_CSTATE;      /* '<S4>/Pitch: Transfer Fcn' */
   real_T ElevationTransferFcn_CSTATE;  /* '<S4>/Elevation: Transfer Fcn' */
+  real_T PitchTransferFcn_CSTATE;      /* '<S4>/Pitch: Transfer Fcn' */
   real_T Integrator_CSTATE;            /* '<S7>/Integrator' */
   real_T Integrator1_CSTATE;           /* '<S7>/Integrator1' */
   real_T Integrator_CSTATE_n;          /* '<S10>/Integrator' */
@@ -966,8 +965,8 @@ typedef struct {
 
 /* State disabled  */
 typedef struct {
-  boolean_T PitchTransferFcn_CSTATE;   /* '<S4>/Pitch: Transfer Fcn' */
   boolean_T ElevationTransferFcn_CSTATE;/* '<S4>/Elevation: Transfer Fcn' */
+  boolean_T PitchTransferFcn_CSTATE;   /* '<S4>/Pitch: Transfer Fcn' */
   boolean_T Integrator_CSTATE;         /* '<S7>/Integrator' */
   boolean_T Integrator1_CSTATE;        /* '<S7>/Integrator1' */
   boolean_T Integrator_CSTATE_n;       /* '<S10>/Integrator' */
@@ -1255,11 +1254,17 @@ struct P_heli_q8_T_ {
   real_T Gainy_Gain;                   /* Expression: 10/9
                                         * Referenced by: '<S5>/Gain: y'
                                         */
-  real_T elevationoffset_Value;        /* Expression: -0.515
-                                        * Referenced by: '<Root>/elevation offset'
-                                        */
   real_T ElevationCounttorad_Gain;     /* Expression: -2 * pi /4096
                                         * Referenced by: '<S4>/Elevation: Count to rad'
+                                        */
+  real_T ElevationTransferFcn_A;       /* Computed Parameter: ElevationTransferFcn_A
+                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
+                                        */
+  real_T ElevationTransferFcn_C;       /* Computed Parameter: ElevationTransferFcn_C
+                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
+                                        */
+  real_T ElevationTransferFcn_D;       /* Computed Parameter: ElevationTransferFcn_D
+                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
                                         */
   real_T PulseGenerator_Amp;           /* Expression: 0.5
                                         * Referenced by: '<Root>/Pulse Generator'
@@ -1291,6 +1296,9 @@ struct P_heli_q8_T_ {
   real_T PitchCounttorad_Gain;         /* Expression: -2*pi /4096
                                         * Referenced by: '<S4>/Pitch: Count to rad'
                                         */
+  real_T Constant2_Value;              /* Expression: 0
+                                        * Referenced by: '<Root>/Constant2'
+                                        */
   real_T PitchTransferFcn_A;           /* Computed Parameter: PitchTransferFcn_A
                                         * Referenced by: '<S4>/Pitch: Transfer Fcn'
                                         */
@@ -1300,32 +1308,20 @@ struct P_heli_q8_T_ {
   real_T PitchTransferFcn_D;           /* Computed Parameter: PitchTransferFcn_D
                                         * Referenced by: '<S4>/Pitch: Transfer Fcn'
                                         */
-  real_T ElevationTransferFcn_A;       /* Computed Parameter: ElevationTransferFcn_A
-                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
-                                        */
-  real_T ElevationTransferFcn_C;       /* Computed Parameter: ElevationTransferFcn_C
-                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
-                                        */
-  real_T ElevationTransferFcn_D;       /* Computed Parameter: ElevationTransferFcn_D
-                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
-                                        */
   real_T Integrator_IC;                /* Expression: 0
                                         * Referenced by: '<S7>/Integrator'
                                         */
-  real_T Gain2_Gain;                   /* Expression: -1
-                                        * Referenced by: '<S7>/Gain2'
-                                        */
   real_T Integrator1_IC;               /* Expression: 0
                                         * Referenced by: '<S7>/Integrator1'
-                                        */
-  real_T Gain3_Gain;                   /* Expression: -1
-                                        * Referenced by: '<S7>/Gain3'
                                         */
   real_T Frontgain_Gain;               /* Expression: 0.5
                                         * Referenced by: '<S1>/Front gain'
                                         */
   real_T Backgain_Gain;                /* Expression: 0.5
                                         * Referenced by: '<S1>/Back gain'
+                                        */
+  real_T elevationoffset_Value;        /* Expression: -0.515
+                                        * Referenced by: '<Root>/elevation offset'
                                         */
   real_T Constant_Value;               /* Expression: 0
                                         * Referenced by: '<Root>/Constant'

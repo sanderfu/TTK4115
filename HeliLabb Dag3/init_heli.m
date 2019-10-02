@@ -61,9 +61,9 @@ F = inv(C*inv(B*K-A)*B);
 
 q1_aug = 100;
 q2_aug = 0.1;
-q3_aug = 10;
+q3_aug = 100;
 q4_aug = 20;
-q5_aug = 0.0000001;
+q5_aug = 1;
 r1_aug = 1;
 r2_aug = 1;
 
@@ -74,7 +74,7 @@ R_aug = [r1_aug 0; 0 r2_aug];
 C_aug = [1 0 0 0 0; 0 0 1 0 0];
 
 K_aug = lqr(A_aug,B_aug,Q_aug,R_aug)
-K_aug_K1 = K_aug(1:2, 1:3);
+K_aug_K1 = K_aug(1:2, 1:3)
 F_aug = inv(C*inv(B*K_aug_K1-A)*B)
-
+F_aug = [0 0; 0 0]
 

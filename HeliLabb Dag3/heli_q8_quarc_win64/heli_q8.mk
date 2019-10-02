@@ -90,7 +90,7 @@ COMPILER_TOOL_CHAIN = vcx64
 
 
 MODEL                = heli_q8
-MODULES              = RTGETINF.C RTGETNAN.C heli_q8_data.c heli_q8_main.c rt_nonfinite.c 
+MODULES              = heli_q8_data.c heli_q8_main.c rtGetInf.c rtGetNaN.c rt_nonfinite.c 
 MAKEFILE             = heli_q8.mk
 MATLAB_ROOT          = C:\Program Files\MATLAB\R2015b
 ALT_MATLAB_ROOT      = C:\PROGRA~1\MATLAB\R2015b
@@ -129,7 +129,7 @@ RELATIVE_PATH_TO_ANCHOR   = ..
 MODELREF_TARGET_TYPE      = NONE
 
 #-- Support for parallel builds
-START_DIR         = F:\HELILA~2
+START_DIR         = C:\Users\noragr\DOCUME~1\Heislabb\HELILA~1
 MASTER_ANCHOR_DIR = 
 
 #-- Support multi-instance code

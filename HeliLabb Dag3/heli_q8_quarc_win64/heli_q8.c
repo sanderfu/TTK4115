@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.68
+ * Model version              : 1.69
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Wed Sep 18 15:59:20 2019
+ * C source code generated on : Wed Oct 02 10:13:23 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -118,7 +118,10 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
   real_T rtb_DeadZonex;
   real_T rtb_Gain;
   real_T rtb_Sum1[2];
+  real_T rtb_Add_p;
   real_T tmp[5];
+  real_T tmp_0[2];
+  real_T tmp_1[2];
   int32_T i;
   int32_T i_0;
   if (rtmIsMajorTimeStep(heli_q8_M)) {
@@ -193,13 +196,15 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
     /* Gain: '<S4>/Elevation: Count to rad' */
     heli_q8_B.ElevationCounttorad = heli_q8_P.ElevationCounttorad_Gain *
       rtb_HILReadEncoderTimebase_o3;
+  }
 
-    /* Sum: '<Root>/Add' incorporates:
-     *  Constant: '<Root>/elevation offset'
-     */
-    heli_q8_B.Add = heli_q8_P.elevationoffset_Value +
-      heli_q8_B.ElevationCounttorad;
-
+  /* TransferFcn: '<S4>/Elevation: Transfer Fcn' */
+  heli_q8_B.ElevationTransferFcn = 0.0;
+  heli_q8_B.ElevationTransferFcn += heli_q8_P.ElevationTransferFcn_C *
+    heli_q8_X.ElevationTransferFcn_CSTATE;
+  heli_q8_B.ElevationTransferFcn += heli_q8_P.ElevationTransferFcn_D *
+    heli_q8_B.ElevationCounttorad;
+  if (rtmIsMajorTimeStep(heli_q8_M)) {
     /* DiscretePulseGenerator: '<Root>/Pulse Generator' */
     rtb_DeadZonex = (heli_q8_DW.clockTickCounter < heli_q8_P.PulseGenerator_Duty)
       && (heli_q8_DW.clockTickCounter >= 0) ? heli_q8_P.PulseGenerator_Amp : 0.0;
@@ -234,15 +239,8 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
     heli_q8_B.PitchCounttorad = heli_q8_P.PitchCounttorad_Gain *
       rtb_HILReadEncoderTimebase_o2;
 
-    /* Gain: '<S7>/Gain' incorporates:
-     *  SignalConversion: '<S7>/TmpSignal ConversionAtGainInport1'
-     */
-    heli_q8_B.Gain[0] = 0.0;
-    heli_q8_B.Gain[0] += heli_q8_P.F_aug[0] * heli_q8_B.Sum1;
-    heli_q8_B.Gain[0] += heli_q8_P.F_aug[2] * heli_q8_B.Joystick_gain_y;
-    heli_q8_B.Gain[1] = 0.0;
-    heli_q8_B.Gain[1] += heli_q8_P.F_aug[1] * heli_q8_B.Sum1;
-    heli_q8_B.Gain[1] += heli_q8_P.F_aug[3] * heli_q8_B.Joystick_gain_y;
+    /* Constant: '<Root>/Constant2' */
+    heli_q8_B.Constant2 = heli_q8_P.Constant2_Value;
   }
 
   /* TransferFcn: '<S4>/Pitch: Transfer Fcn' */
@@ -252,45 +250,45 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
   heli_q8_B.PitchTransferFcn += heli_q8_P.PitchTransferFcn_D *
     heli_q8_B.PitchCounttorad;
 
-  /* TransferFcn: '<S4>/Elevation: Transfer Fcn' */
-  heli_q8_B.ElevationTransferFcn = 0.0;
-  heli_q8_B.ElevationTransferFcn += heli_q8_P.ElevationTransferFcn_C *
-    heli_q8_X.ElevationTransferFcn_CSTATE;
-  heli_q8_B.ElevationTransferFcn += heli_q8_P.ElevationTransferFcn_D *
-    heli_q8_B.ElevationCounttorad;
-
   /* SignalConversion: '<S7>/TmpSignal ConversionAtGain1Inport1' incorporates:
-   *  Gain: '<S7>/Gain2'
-   *  Gain: '<S7>/Gain3'
    *  Integrator: '<S7>/Integrator'
    *  Integrator: '<S7>/Integrator1'
    */
   tmp[0] = heli_q8_B.PitchCounttorad;
   tmp[1] = heli_q8_B.PitchTransferFcn;
   tmp[2] = heli_q8_B.ElevationTransferFcn;
-  tmp[3] = heli_q8_P.Gain2_Gain * heli_q8_X.Integrator_CSTATE;
-  tmp[4] = heli_q8_P.Gain3_Gain * heli_q8_X.Integrator1_CSTATE;
-
-  /* Sum: '<S7>/Sum1' incorporates:
-   *  Gain: '<S7>/Gain1'
-   */
+  tmp[3] = heli_q8_X.Integrator_CSTATE;
+  tmp[4] = heli_q8_X.Integrator1_CSTATE;
   for (i = 0; i < 2; i++) {
-    rtb_DeadZonex = 0.0;
+    /* Gain: '<S7>/Gain' incorporates:
+     *  SignalConversion: '<S7>/TmpSignal ConversionAtGainInport1'
+     *  Sum: '<S7>/Sum1'
+     */
+    tmp_0[i] = 0.0;
+    tmp_0[i] += heli_q8_P.F_aug[i] * heli_q8_B.Constant2;
+    tmp_0[i] += heli_q8_P.F_aug[i + 2] * heli_q8_B.Joystick_gain_y;
+
+    /* Gain: '<S7>/Gain1' incorporates:
+     *  Sum: '<S7>/Sum1'
+     */
+    tmp_1[i] = 0.0;
     for (i_0 = 0; i_0 < 5; i_0++) {
-      rtb_DeadZonex += heli_q8_P.K_aug[(i_0 << 1) + i] * tmp[i_0];
+      tmp_1[i] += heli_q8_P.K_aug[(i_0 << 1) + i] * tmp[i_0];
     }
 
-    rtb_Sum1[i] = heli_q8_B.Gain[i] - rtb_DeadZonex;
+    /* End of Gain: '<S7>/Gain1' */
+
+    /* Sum: '<S7>/Sum1' */
+    rtb_Sum1[i] = tmp_0[i] - tmp_1[i];
   }
 
-  /* End of Sum: '<S7>/Sum1' */
   if (rtmIsMajorTimeStep(heli_q8_M)) {
     /* Constant: '<S7>/Constant2' */
-    heli_q8_B.Constant2 = heli_q8_P.v_s0;
+    heli_q8_B.Constant2_k = heli_q8_P.v_s0;
   }
 
   /* Sum: '<S7>/Sum2' */
-  rtb_DeadZonex = heli_q8_B.Constant2 + rtb_Sum1[0];
+  rtb_DeadZonex = heli_q8_B.Constant2_k + rtb_Sum1[0];
 
   /* Gain: '<S1>/Front gain' incorporates:
    *  Sum: '<S1>/Add'
@@ -302,6 +300,11 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
    */
   heli_q8_B.Backgain = (rtb_DeadZonex + rtb_Sum1[1]) * heli_q8_P.Backgain_Gain;
   if (rtmIsMajorTimeStep(heli_q8_M)) {
+    /* Sum: '<Root>/Add' incorporates:
+     *  Constant: '<Root>/elevation offset'
+     */
+    rtb_Add_p = heli_q8_P.elevationoffset_Value + heli_q8_B.ElevationCounttorad;
+
     /* Constant: '<Root>/Constant3' */
     heli_q8_B.Constant3 = heli_q8_P.v_s0;
   }
@@ -322,7 +325,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
     /* Sum: '<S3>/Sum' incorporates:
      *  Constant: '<Root>/Constant1'
      */
-    rtb_DeadZonex = heli_q8_P.Constant1_Value - heli_q8_B.Add;
+    rtb_DeadZonex = heli_q8_P.Constant1_Value - rtb_Add_p;
 
     /* Gain: '<S10>/K_ei' */
     heli_q8_B.K_ei = heli_q8_P.K_ei_Gain * rtb_DeadZonex;
@@ -411,7 +414,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
      *  Constant: '<Root>/Constant'
      *  Sum: '<S8>/Sum'
      */
-    heli_q8_B.Gain_o = (heli_q8_P.Constant_Value - heli_q8_B.PitchCounttorad) *
+    heli_q8_B.Gain = (heli_q8_P.Constant_Value - heli_q8_B.PitchCounttorad) *
       heli_q8_P.k_pp;
 
     /* Constant: '<S6>/Constant' */
@@ -422,7 +425,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
    *  Gain: '<S8>/Gain1'
    *  Sum: '<S8>/Add'
    */
-  heli_q8_B.Gain_k = (heli_q8_B.Gain_o - heli_q8_P.k_pd *
+  heli_q8_B.Gain_k = (heli_q8_B.Gain - heli_q8_P.k_pd *
                       heli_q8_B.PitchTransferFcn) * heli_q8_P.k_1;
 
   /* Gain: '<S6>/Gain2' incorporates:
@@ -450,7 +453,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
   heli_q8_B.Integrator4 = heli_q8_X.Integrator4_CSTATE;
   if (rtmIsMajorTimeStep(heli_q8_M)) {
     /* Sum: '<S7>/Sum' */
-    heli_q8_B.Sum = heli_q8_B.PitchCounttorad - heli_q8_B.Sum1;
+    heli_q8_B.Sum = heli_q8_B.PitchCounttorad - heli_q8_B.Constant2;
   }
 
   /* Sum: '<S7>/Sum3' */
@@ -505,17 +508,17 @@ void heli_q8_derivatives(void)
   XDot_heli_q8_T *_rtXdot;
   _rtXdot = ((XDot_heli_q8_T *) heli_q8_M->ModelData.derivs);
 
-  /* Derivatives for TransferFcn: '<S4>/Pitch: Transfer Fcn' */
-  _rtXdot->PitchTransferFcn_CSTATE = 0.0;
-  _rtXdot->PitchTransferFcn_CSTATE += heli_q8_P.PitchTransferFcn_A *
-    heli_q8_X.PitchTransferFcn_CSTATE;
-  _rtXdot->PitchTransferFcn_CSTATE += heli_q8_B.PitchCounttorad;
-
   /* Derivatives for TransferFcn: '<S4>/Elevation: Transfer Fcn' */
   _rtXdot->ElevationTransferFcn_CSTATE = 0.0;
   _rtXdot->ElevationTransferFcn_CSTATE += heli_q8_P.ElevationTransferFcn_A *
     heli_q8_X.ElevationTransferFcn_CSTATE;
   _rtXdot->ElevationTransferFcn_CSTATE += heli_q8_B.ElevationCounttorad;
+
+  /* Derivatives for TransferFcn: '<S4>/Pitch: Transfer Fcn' */
+  _rtXdot->PitchTransferFcn_CSTATE = 0.0;
+  _rtXdot->PitchTransferFcn_CSTATE += heli_q8_P.PitchTransferFcn_A *
+    heli_q8_X.PitchTransferFcn_CSTATE;
+  _rtXdot->PitchTransferFcn_CSTATE += heli_q8_B.PitchCounttorad;
 
   /* Derivatives for Integrator: '<S7>/Integrator' */
   _rtXdot->Integrator_CSTATE = heli_q8_B.Sum;
@@ -1064,11 +1067,11 @@ void heli_q8_initialize(void)
   /* InitializeConditions for RateTransition: '<S5>/Rate Transition: y' */
   heli_q8_DW.RateTransitiony_Buffer0 = heli_q8_P.RateTransitiony_X0;
 
-  /* InitializeConditions for TransferFcn: '<S4>/Pitch: Transfer Fcn' */
-  heli_q8_X.PitchTransferFcn_CSTATE = 0.0;
-
   /* InitializeConditions for TransferFcn: '<S4>/Elevation: Transfer Fcn' */
   heli_q8_X.ElevationTransferFcn_CSTATE = 0.0;
+
+  /* InitializeConditions for TransferFcn: '<S4>/Pitch: Transfer Fcn' */
+  heli_q8_X.PitchTransferFcn_CSTATE = 0.0;
 
   /* InitializeConditions for Integrator: '<S7>/Integrator' */
   heli_q8_X.Integrator_CSTATE = heli_q8_P.Integrator_IC;
@@ -1352,10 +1355,10 @@ RT_MODEL_heli_q8_T *heli_q8(void)
   heli_q8_M->Timing.stepSize2 = 0.01;
 
   /* External mode info */
-  heli_q8_M->Sizes.checksums[0] = (367302154U);
-  heli_q8_M->Sizes.checksums[1] = (1669112720U);
-  heli_q8_M->Sizes.checksums[2] = (1968471759U);
-  heli_q8_M->Sizes.checksums[3] = (3939691151U);
+  heli_q8_M->Sizes.checksums[0] = (2044598045U);
+  heli_q8_M->Sizes.checksums[1] = (1669827219U);
+  heli_q8_M->Sizes.checksums[2] = (4191566564U);
+  heli_q8_M->Sizes.checksums[3] = (678234906U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
@@ -1382,14 +1385,12 @@ RT_MODEL_heli_q8_T *heli_q8(void)
     heli_q8_B.RateTransitiony = 0.0;
     heli_q8_B.Joystick_gain_y = 0.0;
     heli_q8_B.ElevationCounttorad = 0.0;
-    heli_q8_B.Add = 0.0;
+    heli_q8_B.ElevationTransferFcn = 0.0;
     heli_q8_B.Sum1 = 0.0;
     heli_q8_B.PitchCounttorad = 0.0;
-    heli_q8_B.Gain[0] = 0.0;
-    heli_q8_B.Gain[1] = 0.0;
-    heli_q8_B.PitchTransferFcn = 0.0;
-    heli_q8_B.ElevationTransferFcn = 0.0;
     heli_q8_B.Constant2 = 0.0;
+    heli_q8_B.PitchTransferFcn = 0.0;
+    heli_q8_B.Constant2_k = 0.0;
     heli_q8_B.Frontgain = 0.0;
     heli_q8_B.Backgain = 0.0;
     heli_q8_B.Constant3 = 0.0;
@@ -1403,7 +1404,7 @@ RT_MODEL_heli_q8_T *heli_q8(void)
     heli_q8_B.Joystick_gain_x = 0.0;
     heli_q8_B.GameController_o4 = 0.0;
     heli_q8_B.GameController_o5 = 0.0;
-    heli_q8_B.Gain_o = 0.0;
+    heli_q8_B.Gain = 0.0;
     heli_q8_B.Gain_k = 0.0;
     heli_q8_B.Gain2 = 0.0;
     heli_q8_B.Integrator = 0.0;
@@ -1516,9 +1517,9 @@ RT_MODEL_heli_q8_T *heli_q8(void)
   heli_q8_M->Sizes.numU = (0);         /* Number of model inputs */
   heli_q8_M->Sizes.sysDirFeedThru = (0);/* The model is not direct feedthrough */
   heli_q8_M->Sizes.numSampTimes = (3); /* Number of sample times */
-  heli_q8_M->Sizes.numBlocks = (79);   /* Number of blocks */
-  heli_q8_M->Sizes.numBlockIO = (33);  /* Number of block outputs */
-  heli_q8_M->Sizes.numBlockPrms = (183);/* Sum of parameter "widths" */
+  heli_q8_M->Sizes.numBlocks = (78);   /* Number of blocks */
+  heli_q8_M->Sizes.numBlockIO = (32);  /* Number of block outputs */
+  heli_q8_M->Sizes.numBlockPrms = (182);/* Sum of parameter "widths" */
   return heli_q8_M;
 }
 
