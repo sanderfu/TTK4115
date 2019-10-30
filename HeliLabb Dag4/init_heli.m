@@ -76,11 +76,9 @@ C_aug = [1 0 0 0 0; 0 0 1 0 0];
 K_aug = lqr(A_aug,B_aug,Q_aug,R_aug)
 K_aug_K1 = K_aug(1:2, 1:3) 
 F_aug = inv(C*inv(B*K_aug_K1-A)*B)
-
+%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%Day 4
-
-%%
 
 %Port is linked to the individual computer and found in Device Manager
 PORT = 3; 
@@ -88,9 +86,13 @@ PORT = 3;
 %Prob 3 - Observability
 J_lambda = m_c*l_c^2+2*m_p*(l_h^2+l_p^2);
 L_3 = l_h*k_f;
-A = [0 1 0 0 0 0; 0 0 0 0 0 0; 0 0 0 1 0 0; 0 0 0 0 0 0; 0 0 0 0 0 1; L_3/J_lambda 0 0 0 0 0]
-C = [0 1 0 1 0 1]
+A = [0 1 0 0 0 0; 0 0 0 0 0 0; 0 0 0 1 0 0; 0 0 0 0 0 0; 0 0 0 0 0 1; L_3/J_lambda 0 0 0 0 0];
+C = [0 1 0 0 0 0; 0 0 0 1 0 0; 0 0 0 0 0 1];
 O_matrix = obsv(A,C)
+%%
+%Problem 5
+C = [0 1 0 0 0 0; 0 0 0 1 0 0; 0 0 0 0 0 1; 1 0 0 0 0 0; 0 0 1 0 0 0;]; 
+O_matrix = obsv(A,C);
 
 %%
 %Prob 6 - Noise
