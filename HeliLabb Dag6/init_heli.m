@@ -142,10 +142,13 @@ travel_rate_encoder_lin = travel_rate_encoder_lin(:,2);
 %Calculate for linearization point
 M_I = [pitch_rate_imu_lin elevation_rate_imu_lin travel_rate_imu_lin pitch_imu_lin elevation_imu_lin];
 V_I_lin = nancov(M_I);
+rowLabels = {'pitch rate', 'elevation rate', 'travel rate', 'pitch', 'elevation'};
+columnLabels = {'pitch rate', 'elevation rate', 'travel rate', 'pitch', 'elevation'};
+matrix2latex(V_I_lin, 'V_I_lin.tex', 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny');
 
 M_E = [pitch_rate_encoder_lin elevation_rate_encoder_lin travel_rate_encoder_lin pitch_encoder_lin elevation_encoder_lin];
 V_E_lin = nancov(M_E);
-
+matrix2latex(V_E_lin, 'V_E_lin.tex', 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny');
 
 %Load results from stationary point and calculate covariances
 pitch_rate_imu_stat = load('Prob6/stationary/pitch_rate_imu.mat','ans');
@@ -192,9 +195,11 @@ travel_rate_encoder_stat = travel_rate_encoder_stat(:,2);
 %Calculate for linearization point
 M_I_stat = [pitch_rate_imu_stat elevation_rate_imu_stat travel_rate_imu_stat pitch_imu_stat elevation_imu_stat];
 V_I_stat = nancov(M_I_stat);
+matrix2latex(V_I_stat, 'V_I_stat.tex', 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny');
 
 M_E_stat = [pitch_rate_encoder_stat elevation_rate_encoder_stat travel_rate_encoder_stat pitch_encoder_stat elevation_encoder_stat];
 V_E_stat = nancov(M_E_stat);
+matrix2latex(V_E_stat, 'V_E_stat.tex', 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny');
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
