@@ -81,7 +81,7 @@ F_aug = inv(C*inv(B*K_aug_K1-A)*B)
 %%Day 4
 
 %Port is linked to the individual computer and found in Device Manager
-PORT = 3; 
+PORT = 4; 
 
 %Prob 3 - Observability
 J_lambda = m_c*l_c^2+2*m_p*(l_h^2+l_p^2);

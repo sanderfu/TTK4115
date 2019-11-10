@@ -37,28 +37,30 @@ zeta = 1;
 
 k_pp = omega_0^2/k_1;
 k_pd = (2*zeta*omega_0)/k_1;
-%%
+
 %Finding k via Linear Quadratic Regulator
+
 q1 = 100;
 q2 = 10;
 q3 = 80;
 r1 = 1;
 r2 = 1;
-%Defining matrices
+
 A = [0 1 0; 0 0 0 ; 0 0 0];
 B = [0 0; 0 k_1; k_2 0];
 Q = [q1 0 0; 0 q2 0; 0 0 q3];
 R = [r1 0; 0 r2];
 C = [1 0 0; 0 0 1];
-%Using LQR optimization to find K
-K = lqr(A,B,Q,R);
 
-%%
+
+
+
+K = lqr(A,B,Q,R);
 F = inv(C*inv(B*K-A)*B);
 
 q1_aug = 100;
 q2_aug = 0.1;
-q3_aug = 100;
+q3_aug = 50;
 q4_aug = 20;
 q5_aug = 1;
 r1_aug = 1;
@@ -73,5 +75,7 @@ C_aug = [1 0 0 0 0; 0 0 1 0 0];
 K_aug = lqr(A_aug,B_aug,Q_aug,R_aug)
 K_aug_K1 = K_aug(1:2, 1:3)
 F_aug = inv(C*inv(B*K_aug_K1-A)*B)
-F_aug = [0 0; 0 0]
+
+%Change F_aug to something random to test how integral effect changes
+%behaviour
 

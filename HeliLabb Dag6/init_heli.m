@@ -80,8 +80,8 @@ F_aug = inv(C*inv(B*K_aug_K1-A)*B);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%Day 4
 
-%Port is linked to the individual computer and found in Device Manager
-PORT = 3; 
+%  is linked to the individual computer and found in Device Manager
+PORT = 4; 
 
 %Prob 3 - Observability
 J_lambda = m_c*l_c^2+2*m_p*(l_h^2+l_p^2);
@@ -142,13 +142,10 @@ travel_rate_encoder_lin = travel_rate_encoder_lin(:,2);
 %Calculate for linearization point
 M_I = [pitch_rate_imu_lin elevation_rate_imu_lin travel_rate_imu_lin pitch_imu_lin elevation_imu_lin];
 V_I_lin = nancov(M_I);
-rowLabels = {'pitch rate', 'elevation rate', 'travel rate', 'pitch', 'elevation'};
-columnLabels = {'pitch rate', 'elevation rate', 'travel rate', 'pitch', 'elevation'};
-matrix2latex(V_I_lin, 'V_I_lin.tex', 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2e', 'size', 'tiny', 'caption', 'Covariances IMU linearization point', 'label', 'V_I_lin');
 
 M_E = [pitch_rate_encoder_lin elevation_rate_encoder_lin travel_rate_encoder_lin pitch_encoder_lin elevation_encoder_lin];
 V_E_lin = nancov(M_E);
-matrix2latex(V_E_lin, 'V_E_lin.tex', 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2e', 'size', 'tiny','caption', 'Covariances Encoder linearization point', 'label', 'V_E_lin')
+
 
 %Load results from stationary point and calculate covariances
 pitch_rate_imu_stat = load('Prob6/stationary/pitch_rate_imu.mat','ans');
@@ -195,11 +192,9 @@ travel_rate_encoder_stat = travel_rate_encoder_stat(:,2);
 %Calculate for linearization point
 M_I_stat = [pitch_rate_imu_stat elevation_rate_imu_stat travel_rate_imu_stat pitch_imu_stat elevation_imu_stat];
 V_I_stat = nancov(M_I_stat);
-matrix2latex(V_I_stat, 'V_I_stat.tex', 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2e', 'size', 'tiny', 'caption', 'Covariances IMU stationary', 'label', 'V_I_stat');
 
 M_E_stat = [pitch_rate_encoder_stat elevation_rate_encoder_stat travel_rate_encoder_stat pitch_encoder_stat elevation_encoder_stat];
 V_E_stat = nancov(M_E_stat);
-matrix2latex(V_E_stat, 'V_E_stat.tex', 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2e', 'size', 'tiny', 'caption', 'Covariances Encoder stationary', 'label', 'V_E_stat')
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -243,8 +238,8 @@ P_2;
 %Day 6
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%This is ust a placeholder, dont use plz
-K_k = [1 0 0 0 0; 0 1 0 0 0; 0 0 1 0 0; 0 0 0 1 0; 0 0 0 0 1; 0 0 0 0 0];
-
 %Define discrete time covariance (equal to cont. time covariance assumed)
-R_d = V_I_lin;
+R_d = V_I_lin;  
+
+%Task 3 - Varying Q_d
+Q_d = [0.001 0 0 0 0 0; 0 1 0 0 0 0; 0 0 0.001 0 0 0; 0 0 0 0.001 0 0; 0 0 0 0 1 0; 0 0 0 0 0 1]
