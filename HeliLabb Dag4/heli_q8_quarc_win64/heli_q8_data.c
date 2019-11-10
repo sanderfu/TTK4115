@@ -9,7 +9,7 @@
  *
  * Model version              : 1.72
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Sun Nov 10 14:45:35 2019
+ * C source code generated on : Sun Nov 10 20:50:03 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -23,27 +23,11 @@
 
 /* Block parameters (auto storage) */
 P_heli_q8_T heli_q8_P = {
-  /*  Variable: F_aug
-   * Referenced by: '<S7>/Gain'
-   */
-  { -1.4254999115429019E-16, 12.769674757744156, 11.141989712813794,
-    -3.9073794431760528E-16 },
   1.0,                                 /* Variable: Joystick_gain_x
                                         * Referenced by: '<S6>/Joystick_gain_x'
                                         */
   1.0,                                 /* Variable: Joystick_gain_y
                                         * Referenced by: '<S6>/Joystick_gain_y'
-                                        */
-
-  /*  Variable: K_aug
-   * Referenced by: '<S7>/Gain1'
-   */
-  { -1.4254999115429019E-16, 12.769674757744156, -6.2878830441227111E-17,
-    7.0508358928651811, 11.141989712813794, -3.9073794431760533E-16,
-    -6.0051792991877893E-17, 4.4721359549995761, 1.0000000000000007,
-    3.0868711143172936E-16 },
-  7.7,                                 /* Variable: v_s0
-                                        * Referenced by: '<S7>/Constant2'
                                         */
   10.0,                                /* Mask Parameter: HILInitialize_analog_input_maxi
                                         * Referenced by: '<Root>/HIL Initialize'
@@ -302,17 +286,18 @@ P_heli_q8_T heli_q8_P = {
   -0.0015339807878856412,              /* Expression: -2 * pi /4096
                                         * Referenced by: '<S4>/Elevation: Count to rad'
                                         */
+  0.5,                                 /* Expression: 0.5
+                                        * Referenced by: '<S1>/Back gain'
+                                        */
+  0.5,                                 /* Expression: 0.5
+                                        * Referenced by: '<S1>/Front gain'
+                                        */
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S5>/Constant'
                                         */
   65.0,                                /* Expression: 65
                                         * Referenced by: '<S5>/Constant1'
                                         */
-
-  /*  Expression: [ 0, 0, 1; 0, 1, 0; -1, 0, 0]
-   * Referenced by: '<S5>/Gain2'
-   */
-  { 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0 },
 
   /*  Expression: [ 0, 0, 1; 0, 1, 0; -1, 0, 0]
    * Referenced by: '<S5>/Gain1'
@@ -323,18 +308,6 @@ P_heli_q8_T heli_q8_P = {
                                         */
   0.00076699039394282058,              /* Expression: 2*pi/8192
                                         * Referenced by: '<S4>/Travel: Count to rad'
-                                        */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<S7>/Integrator'
-                                        */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<S7>/Integrator1'
-                                        */
-  0.5,                                 /* Expression: 0.5
-                                        * Referenced by: '<S1>/Back gain'
-                                        */
-  0.5,                                 /* Expression: 0.5
-                                        * Referenced by: '<S1>/Front gain'
                                         */
   -50.0,                               /* Computed Parameter: ElevationTransferFcn_A
                                         * Referenced by: '<S4>/Elevation: Transfer Fcn'
@@ -375,6 +348,17 @@ P_heli_q8_T heli_q8_P = {
   -5.0,                                /* Expression: -5
                                         * Referenced by: '<S4>/Back motor: Saturation'
                                         */
+
+  /*  Expression: [ 0, 0, 1; 0, 1, 0; -1, 0, 0]
+   * Referenced by: '<S5>/Gain2'
+   */
+  { 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0 },
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<S7>/Integrator'
+                                        */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<S7>/Integrator1'
+                                        */
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S10>/Gain1'
                                         */
@@ -400,7 +384,7 @@ P_heli_q8_T heli_q8_P = {
   /*  Expression: value
    * Referenced by: '<S5>/String Constant'
    */
-  { 115U, 101U, 114U, 105U, 97U, 108U, 58U, 47U, 47U, 73U, 77U, 85U, 58U, 52U,
+  { 115U, 101U, 114U, 105U, 97U, 108U, 58U, 47U, 47U, 73U, 77U, 85U, 58U, 51U,
     63U, 98U, 97U, 117U, 100U, 61U, 49U, 49U, 53U, 50U, 48U, 48U, 44U, 119U,
     111U, 114U, 100U, 61U, 56U, 44U, 112U, 97U, 114U, 105U, 116U, 121U, 61U,
     110U, 111U, 110U, 101U, 44U, 115U, 116U, 111U, 112U, 61U, 49U, 0U, 0U, 0U,

@@ -81,7 +81,7 @@ F_aug = inv(C*inv(B*K_aug_K1-A)*B);
 %%Day 4
 
 %Port is linked to the individual computer and found in Device Manager
-PORT = 4; 
+PORT = 3; 
 
 %Prob 3 - Observability
 J_lambda = m_c*l_c^2+2*m_p*(l_h^2+l_p^2);
@@ -98,44 +98,44 @@ O_matrix = obsv(A,C);
 %Prob 6 - Noise
 
 %Load results from linearization IMU
-pitch_rate_imu_lin = load('Prob6/linearization point/pitch_rate_imu.mat','ans');
+pitch_rate_imu_lin = load('Prob6/linearization_point_new_filter/pitch_rate_imu.mat','ans');
 pitch_rate_imu_lin = transpose(pitch_rate_imu_lin.ans);
 pitch_rate_imu_lin = pitch_rate_imu_lin(:,2);
 
-pitch_imu_lin = load('Prob6/linearization point/pitch_imu.mat','ans');
+pitch_imu_lin = load('Prob6/linearization_point_new_filter/pitch_imu.mat','ans');
 pitch_imu_lin = transpose(pitch_imu_lin.ans);
 pitch_imu_lin = pitch_imu_lin(:,2);
 
-elevation_rate_imu_lin = load('Prob6/linearization point/elevation_rate_imu.mat','ans');
+elevation_rate_imu_lin = load('Prob6/linearization_point_new_filter/elevation_rate_imu.mat','ans');
 elevation_rate_imu_lin = transpose(elevation_rate_imu_lin.ans);
 elevation_rate_imu_lin = elevation_rate_imu_lin(:,2);
 
-elevation_imu_lin = load('Prob6/linearization point/elevation_imu.mat','ans');
+elevation_imu_lin = load('Prob6/linearization_point_new_filter/elevation_imu.mat','ans');
 elevation_imu_lin = transpose(elevation_imu_lin.ans);
 elevation_imu_lin = elevation_imu_lin(:,2);
 
-travel_rate_imu_lin = load('Prob6/linearization point/travel_rate_imu.mat','ans');
+travel_rate_imu_lin = load('Prob6/linearization_point_new_filter/travel_rate_imu.mat','ans');
 travel_rate_imu_lin = transpose(travel_rate_imu_lin.ans);
 travel_rate_imu_lin = travel_rate_imu_lin(:,2);
 
 %Load results from linearization Encoder
-pitch_rate_encoder_lin = load('Prob6/linearization point/pitch_rate_encoder.mat','ans');
+pitch_rate_encoder_lin = load('Prob6/linearization_point_new_filter/pitch_rate_encoder.mat','ans');
 pitch_rate_encoder_lin = transpose(pitch_rate_encoder_lin.ans);
 pitch_rate_encoder_lin = pitch_rate_encoder_lin(:,2);
 
-pitch_encoder_lin = load('Prob6/linearization point/pitch_encoder.mat','ans');
+pitch_encoder_lin = load('Prob6/linearization_point_new_filter/pitch_encoder.mat','ans');
 pitch_encoder_lin = transpose(pitch_encoder_lin.ans);
 pitch_encoder_lin = pitch_encoder_lin(:,2);
 
-elevation_rate_encoder_lin = load('Prob6/linearization point/elevation_rate_encoder.mat','ans');
+elevation_rate_encoder_lin = load('Prob6/linearization_point_new_filter/elevation_rate_encoder.mat','ans');
 elevation_rate_encoder_lin = transpose(elevation_rate_encoder_lin.ans);
 elevation_rate_encoder_lin = elevation_rate_encoder_lin(:,2);
 
-elevation_encoder_lin = load('Prob6/linearization point/elevation_encoder.mat','ans');
+elevation_encoder_lin = load('Prob6/linearization_point_new_filter/elevation_encoder.mat','ans');
 elevation_encoder_lin = transpose(elevation_encoder_lin.ans);
 elevation_encoder_lin = elevation_encoder_lin(:,2);
 
-travel_rate_encoder_lin = load('Prob6/linearization point/travel_rate_encoder.mat','ans');
+travel_rate_encoder_lin = load('Prob6/linearization_point_new_filter/travel_rate_encoder.mat','ans');
 travel_rate_encoder_lin = transpose(travel_rate_encoder_lin.ans);
 travel_rate_encoder_lin = travel_rate_encoder_lin(:,2);
 
@@ -148,44 +148,44 @@ V_E_lin = [nancov(M_E(:,1)); nancov(M_E(:,2)); nancov(M_E(:,3)); nancov(M_E(:,4)
 
 
 %Load results from stationary point and calculate covariances
-pitch_rate_imu_stat = load('Prob6/stationary/pitch_rate_imu.mat','ans');
+pitch_rate_imu_stat = load('Prob6/stationary_new_filter/pitch_rate_imu.mat','ans');
 pitch_rate_imu_stat = transpose(pitch_rate_imu_stat.ans);
 pitch_rate_imu_stat = pitch_rate_imu_stat(:,2);
 
-pitch_imu_stat = load('Prob6/stationary/pitch_imu.mat','ans');
+pitch_imu_stat = load('Prob6/stationary_new_filter/pitch_imu.mat','ans');
 pitch_imu_stat = transpose(pitch_imu_stat.ans);
 pitch_imu_stat = pitch_imu_stat(:,2);
 
-elevation_rate_imu_stat = load('Prob6/stationary/elevation_rate_imu.mat','ans');
+elevation_rate_imu_stat = load('Prob6/stationary_new_filter/elevation_rate_imu.mat','ans');
 elevation_rate_imu_stat = transpose(elevation_rate_imu_stat.ans);
 elevation_rate_imu_stat = elevation_rate_imu_stat(:,2);
 
-elevation_imu_stat = load('Prob6/stationary/elevation_imu.mat','ans');
+elevation_imu_stat = load('Prob6/stationary_new_filter/elevation_imu.mat','ans');
 elevation_imu_stat = transpose(elevation_imu_stat.ans);
 elevation_imu_stat = elevation_imu_stat(:,2);
 
-travel_rate_imu_stat = load('Prob6/stationary/travel_rate_imu.mat','ans');
+travel_rate_imu_stat = load('Prob6/stationary_new_filter/travel_rate_imu.mat','ans');
 travel_rate_imu_stat = transpose(travel_rate_imu_stat.ans);
 travel_rate_imu_stat = travel_rate_imu_stat(:,2);
 
 %Load results from linearization Encoder
-pitch_rate_encoder_stat = load('Prob6/stationary/pitch_rate_encoder.mat','ans');
+pitch_rate_encoder_stat = load('Prob6/stationary_new_filter/pitch_rate_encoder.mat','ans');
 pitch_rate_encoder_stat = transpose(pitch_rate_encoder_stat.ans);
 pitch_rate_encoder_stat = pitch_rate_encoder_stat(:,2);
 
-pitch_encoder_stat = load('Prob6/stationary/pitch_encoder.mat','ans');
+pitch_encoder_stat = load('Prob6/stationary_new_filter/pitch_encoder.mat','ans');
 pitch_encoder_stat = transpose(pitch_encoder_stat.ans);
 pitch_encoder_stat = pitch_encoder_stat(:,2);
 
-elevation_rate_encoder_stat = load('Prob6/stationary/elevation_rate_encoder.mat','ans');
+elevation_rate_encoder_stat = load('Prob6/stationary_new_filter/elevation_rate_encoder.mat','ans');
 elevation_rate_encoder_stat = transpose(elevation_rate_encoder_stat.ans);
 elevation_rate_encoder_stat = elevation_rate_encoder_stat(:,2);
 
-elevation_encoder_stat = load('Prob6/stationary/elevation_encoder.mat','ans');
+elevation_encoder_stat = load('Prob6/stationary_new_filter/elevation_encoder.mat','ans');
 elevation_encoder_stat = transpose(elevation_encoder_stat.ans);
 elevation_encoder_stat = elevation_encoder_stat(:,2);
 
-travel_rate_encoder_stat = load('Prob6/stationary/travel_rate_encoder.mat','ans');
+travel_rate_encoder_stat = load('Prob6/stationary_new_filter/travel_rate_encoder.mat','ans');
 travel_rate_encoder_stat = transpose(travel_rate_encoder_stat.ans);
 travel_rate_encoder_stat = travel_rate_encoder_stat(:,2);
 

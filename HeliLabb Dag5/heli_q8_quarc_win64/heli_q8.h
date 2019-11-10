@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.109
+ * Model version              : 1.110
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Wed Oct 30 15:16:35 2019
+ * C source code generated on : Sun Nov 10 22:33:10 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -848,13 +848,21 @@ typedef struct {
   real_T PitchTransferFcn;             /* '<S3>/Pitch: Transfer Fcn' */
   real_T TravelCounttorad;             /* '<S3>/Travel: Count to rad' */
   real_T TravelTransferFcn;            /* '<S3>/Travel: Transfer Fcn' */
+  real_T UnitDelay1[36];               /* '<Root>/Unit Delay1' */
   real_T Gain[6];                      /* '<S9>/Gain' */
   real_T RateTransitionx;              /* '<S5>/Rate Transition: x' */
   real_T Joystick_gain_x;              /* '<S5>/Joystick_gain_x' */
   real_T RateTransitiony;              /* '<S5>/Rate Transition: y' */
   real_T Joystick_gain_y;              /* '<S5>/Joystick_gain_y' */
+  real_T Gain_d[2];                    /* '<S7>/Gain' */
   real_T Sum1[2];                      /* '<S7>/Sum1' */
+  real_T Constant[36];                 /* '<Root>/Constant' */
+  real_T Constant1[12];                /* '<Root>/Constant1' */
+  real_T Constant2[36];                /* '<Root>/Constant2' */
+  real_T Constant2_k;                  /* '<S7>/Constant2' */
   real_T Gain1[3];                     /* '<S4>/Gain1' */
+  real_T FrontmotorSaturation;         /* '<S3>/Front motor: Saturation' */
+  real_T BackmotorSaturation;          /* '<S3>/Back motor: Saturation' */
   real_T Gain2[3];                     /* '<S4>/Gain2' */
   real_T GameController_o4;            /* '<S5>/Game Controller' */
   real_T GameController_o5;            /* '<S5>/Game Controller' */

@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.109
+ * Model version              : 1.110
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Wed Oct 30 15:16:35 2019
+ * C source code generated on : Sun Nov 10 22:33:10 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -80,7 +80,7 @@ static const char_T * rtDataTypeNames[] = {
 
 /* data type transitions for block I/O structure */
 static DataTypeTransition rtBTransitions[] = {
-  { (char_T *)(&heli_q8_B.UnitDelay[0]), 0, 0, 83 },
+  { (char_T *)(&heli_q8_B.UnitDelay[0]), 0, 0, 208 },
 
   { (char_T *)(&heli_q8_B.StreamCall1_o2), 3, 0, 1 }
   ,
