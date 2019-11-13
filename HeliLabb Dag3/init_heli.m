@@ -79,3 +79,4 @@ F_aug = inv(C*inv(B*K_aug_K1-A)*B)
 %Change F_aug to something random to test how integral effect changes
 %behaviour
 
+
