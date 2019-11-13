@@ -375,31 +375,31 @@
 	  section.data(5).logicalSrcIdx = 78;
 	  section.data(5).dtTransOffset = 4;
 	
-	  ;% heli_q8_P.RateTransitionx_X0
+	  ;% heli_q8_P.TravelCounttorad_Gain
 	  section.data(6).logicalSrcIdx = 79;
 	  section.data(6).dtTransOffset = 5;
 	
-	  ;% heli_q8_P.DeadZonex_Start
+	  ;% heli_q8_P.Integrator1_IC
 	  section.data(7).logicalSrcIdx = 80;
 	  section.data(7).dtTransOffset = 6;
 	
-	  ;% heli_q8_P.DeadZonex_End
+	  ;% heli_q8_P.Constant1_Value
 	  section.data(8).logicalSrcIdx = 81;
 	  section.data(8).dtTransOffset = 7;
 	
-	  ;% heli_q8_P.Gainx_Gain
+	  ;% heli_q8_P.RateTransitionx_X0
 	  section.data(9).logicalSrcIdx = 82;
 	  section.data(9).dtTransOffset = 8;
 	
-	  ;% heli_q8_P.TravelCounttorad_Gain
+	  ;% heli_q8_P.DeadZonex_Start
 	  section.data(10).logicalSrcIdx = 83;
 	  section.data(10).dtTransOffset = 9;
 	
-	  ;% heli_q8_P.Integrator1_IC
+	  ;% heli_q8_P.DeadZonex_End
 	  section.data(11).logicalSrcIdx = 84;
 	  section.data(11).dtTransOffset = 10;
 	
-	  ;% heli_q8_P.Constant1_Value
+	  ;% heli_q8_P.Gainx_Gain
 	  section.data(12).logicalSrcIdx = 85;
 	  section.data(12).dtTransOffset = 11;
 	
@@ -620,19 +620,19 @@
 	  section.data(5).logicalSrcIdx = 4;
 	  section.data(5).dtTransOffset = 4;
 	
-	  ;% heli_q8_B.RateTransitionx
+	  ;% heli_q8_B.TravelCounttorad
 	  section.data(6).logicalSrcIdx = 5;
 	  section.data(6).dtTransOffset = 5;
 	
-	  ;% heli_q8_B.Joystick_gain_x
+	  ;% heli_q8_B.Integrator1
 	  section.data(7).logicalSrcIdx = 6;
 	  section.data(7).dtTransOffset = 6;
 	
-	  ;% heli_q8_B.TravelCounttorad
+	  ;% heli_q8_B.RateTransitionx
 	  section.data(8).logicalSrcIdx = 7;
 	  section.data(8).dtTransOffset = 7;
 	
-	  ;% heli_q8_B.Integrator1
+	  ;% heli_q8_B.Joystick_gain_x
 	  section.data(9).logicalSrcIdx = 8;
 	  section.data(9).dtTransOffset = 8;
 	
@@ -821,8 +821,8 @@
       dworkMap.sections(4) = section;
       clear section
       
-      section.nData     = 13;
-      section.data(13)  = dumData; %prealloc
+      section.nData     = 12;
+      section.data(12)  = dumData; %prealloc
       
 	  ;% heli_q8_DW.Elevation_PWORK.LoggedData
 	  section.data(1).logicalSrcIdx = 14;
@@ -832,49 +832,45 @@
 	  section.data(2).logicalSrcIdx = 15;
 	  section.data(2).dtTransOffset = 2;
 	
-	  ;% heli_q8_DW.Scope_PWORK.LoggedData
+	  ;% heli_q8_DW.Travel_PWORK.LoggedData
 	  section.data(3).logicalSrcIdx = 16;
 	  section.data(3).dtTransOffset = 4;
 	
-	  ;% heli_q8_DW.Travel_PWORK.LoggedData
-	  section.data(4).logicalSrcIdx = 17;
-	  section.data(4).dtTransOffset = 5;
-	
 	  ;% heli_q8_DW.ElevationScoperads_PWORK.LoggedData
+	  section.data(4).logicalSrcIdx = 17;
+	  section.data(4).dtTransOffset = 6;
+	
+	  ;% heli_q8_DW.ElevationScoperad_PWORK.LoggedData
 	  section.data(5).logicalSrcIdx = 18;
 	  section.data(5).dtTransOffset = 7;
 	
-	  ;% heli_q8_DW.ElevationScoperad_PWORK.LoggedData
+	  ;% heli_q8_DW.PitchScoperad_PWORK.LoggedData
 	  section.data(6).logicalSrcIdx = 19;
 	  section.data(6).dtTransOffset = 8;
 	
-	  ;% heli_q8_DW.PitchScoperad_PWORK.LoggedData
+	  ;% heli_q8_DW.PtichrateScoperads_PWORK.LoggedData
 	  section.data(7).logicalSrcIdx = 20;
 	  section.data(7).dtTransOffset = 9;
 	
-	  ;% heli_q8_DW.PtichrateScoperads_PWORK.LoggedData
+	  ;% heli_q8_DW.TravelrateScoperads_PWORK.LoggedData
 	  section.data(8).logicalSrcIdx = 21;
 	  section.data(8).dtTransOffset = 10;
 	
-	  ;% heli_q8_DW.TravelrateScoperads_PWORK.LoggedData
+	  ;% heli_q8_DW.TravelScoperad_PWORK.LoggedData
 	  section.data(9).logicalSrcIdx = 22;
 	  section.data(9).dtTransOffset = 11;
 	
-	  ;% heli_q8_DW.TravelScoperad_PWORK.LoggedData
+	  ;% heli_q8_DW.HILWriteAnalog_PWORK
 	  section.data(10).logicalSrcIdx = 23;
 	  section.data(10).dtTransOffset = 12;
 	
-	  ;% heli_q8_DW.HILWriteAnalog_PWORK
+	  ;% heli_q8_DW.XScope_PWORK.LoggedData
 	  section.data(11).logicalSrcIdx = 24;
 	  section.data(11).dtTransOffset = 13;
 	
-	  ;% heli_q8_DW.XScope_PWORK.LoggedData
+	  ;% heli_q8_DW.YScope_PWORK.LoggedData
 	  section.data(12).logicalSrcIdx = 25;
 	  section.data(12).dtTransOffset = 14;
-	
-	  ;% heli_q8_DW.YScope_PWORK.LoggedData
-	  section.data(13).logicalSrcIdx = 26;
-	  section.data(13).dtTransOffset = 15;
 	
       nTotData = nTotData + section.nData;
       dworkMap.sections(5) = section;
@@ -884,31 +880,31 @@
       section.data(7)  = dumData; %prealloc
       
 	  ;% heli_q8_DW.HILInitialize_ClockModes
-	  section.data(1).logicalSrcIdx = 27;
+	  section.data(1).logicalSrcIdx = 26;
 	  section.data(1).dtTransOffset = 0;
 	
 	  ;% heli_q8_DW.HILInitialize_QuadratureModes
-	  section.data(2).logicalSrcIdx = 28;
+	  section.data(2).logicalSrcIdx = 27;
 	  section.data(2).dtTransOffset = 3;
 	
 	  ;% heli_q8_DW.HILInitialize_InitialEICounts
-	  section.data(3).logicalSrcIdx = 29;
+	  section.data(3).logicalSrcIdx = 28;
 	  section.data(3).dtTransOffset = 11;
 	
 	  ;% heli_q8_DW.HILInitialize_POModeValues
-	  section.data(4).logicalSrcIdx = 30;
+	  section.data(4).logicalSrcIdx = 29;
 	  section.data(4).dtTransOffset = 19;
 	
 	  ;% heli_q8_DW.HILInitialize_POAlignValues
-	  section.data(5).logicalSrcIdx = 31;
+	  section.data(5).logicalSrcIdx = 30;
 	  section.data(5).dtTransOffset = 27;
 	
 	  ;% heli_q8_DW.HILInitialize_POPolarityVals
-	  section.data(6).logicalSrcIdx = 32;
+	  section.data(6).logicalSrcIdx = 31;
 	  section.data(6).dtTransOffset = 35;
 	
 	  ;% heli_q8_DW.HILReadEncoderTimebase_Buffer
-	  section.data(7).logicalSrcIdx = 33;
+	  section.data(7).logicalSrcIdx = 32;
 	  section.data(7).dtTransOffset = 43;
 	
       nTotData = nTotData + section.nData;
@@ -919,7 +915,7 @@
       section.data(1)  = dumData; %prealloc
       
 	  ;% heli_q8_DW.HILInitialize_POSortedChans
-	  section.data(1).logicalSrcIdx = 34;
+	  section.data(1).logicalSrcIdx = 33;
 	  section.data(1).dtTransOffset = 0;
 	
       nTotData = nTotData + section.nData;
@@ -952,8 +948,8 @@
   ;%
 
 
-  targMap.checksum0 = 3986299175;
-  targMap.checksum1 = 3743575975;
-  targMap.checksum2 = 1664102560;
-  targMap.checksum3 = 389368168;
+  targMap.checksum0 = 130559184;
+  targMap.checksum1 = 3663601196;
+  targMap.checksum2 = 2079835019;
+  targMap.checksum3 = 3555629681;
 

@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.60
+ * Model version              : 1.61
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Wed Sep 04 15:29:15 2019
+ * C source code generated on : Wed Nov 13 20:37:35 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -276,6 +276,15 @@ P_heli_q8_T heli_q8_P = {
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S5>/Integrator3'
                                         */
+  0.00076699039394282058,              /* Expression: 2*pi/8192
+                                        * Referenced by: '<S3>/Travel: Count to rad'
+                                        */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<S5>/Integrator1'
+                                        */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<Root>/Constant1'
+                                        */
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S4>/Rate Transition: x'
                                         */
@@ -287,15 +296,6 @@ P_heli_q8_T heli_q8_P = {
                                         */
   1.1111111111111112,                  /* Expression: 10/9
                                         * Referenced by: '<S4>/Gain: x'
-                                        */
-  0.00076699039394282058,              /* Expression: 2*pi/8192
-                                        * Referenced by: '<S3>/Travel: Count to rad'
-                                        */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<S5>/Integrator1'
-                                        */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<Root>/Constant1'
                                         */
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S4>/Rate Transition: y'

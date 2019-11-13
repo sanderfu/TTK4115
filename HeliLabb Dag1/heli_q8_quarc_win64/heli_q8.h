@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.60
+ * Model version              : 1.61
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Wed Sep 04 15:29:15 2019
+ * C source code generated on : Wed Nov 13 20:37:35 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -829,10 +829,10 @@ typedef struct {
   real_T Integrator5;                  /* '<S5>/Integrator5' */
   real_T PitchCounttorad;              /* '<S3>/Pitch: Count to rad' */
   real_T Integrator3;                  /* '<S5>/Integrator3' */
-  real_T RateTransitionx;              /* '<S4>/Rate Transition: x' */
-  real_T Joystick_gain_x;              /* '<S4>/Joystick_gain_x' */
   real_T TravelCounttorad;             /* '<S3>/Travel: Count to rad' */
   real_T Integrator1;                  /* '<S5>/Integrator1' */
+  real_T RateTransitionx;              /* '<S4>/Rate Transition: x' */
+  real_T Joystick_gain_x;              /* '<S4>/Joystick_gain_x' */
   real_T RateTransitiony;              /* '<S4>/Rate Transition: y' */
   real_T Joystick_gain_y;              /* '<S4>/Joystick_gain_y' */
   real_T K_ei;                         /* '<S7>/K_ei' */
@@ -872,10 +872,6 @@ typedef struct {
   struct {
     void *LoggedData[2];
   } Pitch_PWORK;                       /* '<Root>/Pitch' */
-
-  struct {
-    void *LoggedData;
-  } Scope_PWORK;                       /* '<Root>/Scope' */
 
   struct {
     void *LoggedData[2];
@@ -1231,6 +1227,15 @@ struct P_heli_q8_T_ {
   real_T Integrator3_IC;               /* Expression: 0
                                         * Referenced by: '<S5>/Integrator3'
                                         */
+  real_T TravelCounttorad_Gain;        /* Expression: 2*pi/8192
+                                        * Referenced by: '<S3>/Travel: Count to rad'
+                                        */
+  real_T Integrator1_IC;               /* Expression: 0
+                                        * Referenced by: '<S5>/Integrator1'
+                                        */
+  real_T Constant1_Value;              /* Expression: 0
+                                        * Referenced by: '<Root>/Constant1'
+                                        */
   real_T RateTransitionx_X0;           /* Expression: 0
                                         * Referenced by: '<S4>/Rate Transition: x'
                                         */
@@ -1242,15 +1247,6 @@ struct P_heli_q8_T_ {
                                         */
   real_T Gainx_Gain;                   /* Expression: 10/9
                                         * Referenced by: '<S4>/Gain: x'
-                                        */
-  real_T TravelCounttorad_Gain;        /* Expression: 2*pi/8192
-                                        * Referenced by: '<S3>/Travel: Count to rad'
-                                        */
-  real_T Integrator1_IC;               /* Expression: 0
-                                        * Referenced by: '<S5>/Integrator1'
-                                        */
-  real_T Constant1_Value;              /* Expression: 0
-                                        * Referenced by: '<Root>/Constant1'
                                         */
   real_T RateTransitiony_X0;           /* Expression: 0
                                         * Referenced by: '<S4>/Rate Transition: y'

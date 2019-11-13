@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.60
+ * Model version              : 1.61
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Wed Sep 04 15:29:15 2019
+ * C source code generated on : Wed Nov 13 20:37:35 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -75,7 +75,7 @@ static DataTypeTransition rtBTransitions[] = {
 
   { (char_T *)(&heli_q8_DW.HILReadEncoderTimebase_Task), 16, 0, 1 },
 
-  { (char_T *)(&heli_q8_DW.Elevation_PWORK.LoggedData[0]), 11, 0, 16 },
+  { (char_T *)(&heli_q8_DW.Elevation_PWORK.LoggedData[0]), 11, 0, 15 },
 
   { (char_T *)(&heli_q8_DW.HILInitialize_ClockModes[0]), 6, 0, 46 },
 

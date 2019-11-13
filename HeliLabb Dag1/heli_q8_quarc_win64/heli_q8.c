@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.60
+ * Model version              : 1.61
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Wed Sep 04 15:29:15 2019
+ * C source code generated on : Wed Nov 13 20:37:35 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -179,6 +179,14 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
   /* Integrator: '<S5>/Integrator3' */
   heli_q8_B.Integrator3 = heli_q8_X.Integrator3_CSTATE;
   if (rtmIsMajorTimeStep(heli_q8_M)) {
+    /* Gain: '<S3>/Travel: Count to rad' */
+    heli_q8_B.TravelCounttorad = heli_q8_P.TravelCounttorad_Gain *
+      rtb_FrontmotorSaturation;
+  }
+
+  /* Integrator: '<S5>/Integrator1' */
+  heli_q8_B.Integrator1 = heli_q8_X.Integrator1_CSTATE;
+  if (rtmIsMajorTimeStep(heli_q8_M)) {
     /* RateTransition: '<S4>/Rate Transition: x' */
     if (heli_q8_M->Timing.RateInteraction.TID1_2) {
       heli_q8_B.RateTransitionx = heli_q8_DW.RateTransitionx_Buffer0;
@@ -203,14 +211,6 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
     heli_q8_B.Joystick_gain_x = heli_q8_P.Gainx_Gain * rtb_Sum1 *
       heli_q8_P.Joystick_gain_x;
 
-    /* Gain: '<S3>/Travel: Count to rad' */
-    heli_q8_B.TravelCounttorad = heli_q8_P.TravelCounttorad_Gain *
-      rtb_FrontmotorSaturation;
-  }
-
-  /* Integrator: '<S5>/Integrator1' */
-  heli_q8_B.Integrator1 = heli_q8_X.Integrator1_CSTATE;
-  if (rtmIsMajorTimeStep(heli_q8_M)) {
     /* RateTransition: '<S4>/Rate Transition: y' */
     if (heli_q8_M->Timing.RateInteraction.TID1_2) {
       heli_q8_B.RateTransitiony = heli_q8_DW.RateTransitiony_Buffer0;
@@ -956,11 +956,11 @@ void heli_q8_initialize(void)
   /* InitializeConditions for Integrator: '<S5>/Integrator3' */
   heli_q8_X.Integrator3_CSTATE = heli_q8_P.Integrator3_IC;
 
-  /* InitializeConditions for RateTransition: '<S4>/Rate Transition: x' */
-  heli_q8_DW.RateTransitionx_Buffer0 = heli_q8_P.RateTransitionx_X0;
-
   /* InitializeConditions for Integrator: '<S5>/Integrator1' */
   heli_q8_X.Integrator1_CSTATE = heli_q8_P.Integrator1_IC;
+
+  /* InitializeConditions for RateTransition: '<S4>/Rate Transition: x' */
+  heli_q8_DW.RateTransitionx_Buffer0 = heli_q8_P.RateTransitionx_X0;
 
   /* InitializeConditions for RateTransition: '<S4>/Rate Transition: y' */
   heli_q8_DW.RateTransitiony_Buffer0 = heli_q8_P.RateTransitiony_X0;
@@ -1235,10 +1235,10 @@ RT_MODEL_heli_q8_T *heli_q8(void)
   heli_q8_M->Timing.stepSize2 = 0.01;
 
   /* External mode info */
-  heli_q8_M->Sizes.checksums[0] = (3986299175U);
-  heli_q8_M->Sizes.checksums[1] = (3743575975U);
-  heli_q8_M->Sizes.checksums[2] = (1664102560U);
-  heli_q8_M->Sizes.checksums[3] = (389368168U);
+  heli_q8_M->Sizes.checksums[0] = (130559184U);
+  heli_q8_M->Sizes.checksums[1] = (3663601196U);
+  heli_q8_M->Sizes.checksums[2] = (2079835019U);
+  heli_q8_M->Sizes.checksums[3] = (3555629681U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
@@ -1267,10 +1267,10 @@ RT_MODEL_heli_q8_T *heli_q8(void)
     heli_q8_B.Integrator5 = 0.0;
     heli_q8_B.PitchCounttorad = 0.0;
     heli_q8_B.Integrator3 = 0.0;
-    heli_q8_B.RateTransitionx = 0.0;
-    heli_q8_B.Joystick_gain_x = 0.0;
     heli_q8_B.TravelCounttorad = 0.0;
     heli_q8_B.Integrator1 = 0.0;
+    heli_q8_B.RateTransitionx = 0.0;
+    heli_q8_B.Joystick_gain_x = 0.0;
     heli_q8_B.RateTransitiony = 0.0;
     heli_q8_B.Joystick_gain_y = 0.0;
     heli_q8_B.K_ei = 0.0;
@@ -1388,7 +1388,7 @@ RT_MODEL_heli_q8_T *heli_q8(void)
   heli_q8_M->Sizes.numU = (0);         /* Number of model inputs */
   heli_q8_M->Sizes.sysDirFeedThru = (0);/* The model is not direct feedthrough */
   heli_q8_M->Sizes.numSampTimes = (3); /* Number of sample times */
-  heli_q8_M->Sizes.numBlocks = (55);   /* Number of blocks */
+  heli_q8_M->Sizes.numBlocks = (54);   /* Number of blocks */
   heli_q8_M->Sizes.numBlockIO = (23);  /* Number of block outputs */
   heli_q8_M->Sizes.numBlockPrms = (151);/* Sum of parameter "widths" */
   return heli_q8_M;
