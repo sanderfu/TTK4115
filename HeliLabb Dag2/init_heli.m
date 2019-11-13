@@ -13,8 +13,8 @@
 
 %%%%%%%%%%% Calibration of the encoder and the hardware for the specific
 %%%%%%%%%%% helicopter
-Joystick_gain_x = 1;
-Joystick_gain_y = 1;
+Joystick_gain_x = 0.5;
+Joystick_gain_y = 0.5;
 
 
 %%%%%%%%%%% Physical constants
@@ -32,30 +32,28 @@ k_1 = k_f/(2*m_p*l_p); %
 k_2 = (l_h*k_f)/(m_c*l_c^2+2*m_p*l_h^2); 
 k_3 = (v_s0*l_h*k_f)/(m_c*l_c^2+2*m_p*(l_h^2+l_p^2));
 
-omega_0 = -2;
-zeta = 1;
+problem_to_run=input('What problem to run?');
 
-k_pp = omega_0^2/k_1;
-k_pd = (2*zeta*omega_0)/k_1;
+k_pp=0;
+k_pd=0;
 
-%Finding k via Linear Quadratic Regulator
+%pole_plotter(2,k_1);
+%pole_finder(6,0,k_1)
 
-q1 = 100;
-q2 = 100;
-q3 = 100;
-r1 = 1;
-r2 = 1;
+if problem_to_run==2
+    fprintf('Running problem 2\n');
+    k_pp=input('Value for k_pp: ');
+    k_pd=input('Value for k_pd: ');
+elseif problem_to_run==3
+    fprintf('Running problem 3\n');
+    omega_0 = input('Value for omega_0: ');
+    zeta = input('Value for zeta: ');
+    k_pp = omega_0^2/k_1;
+    k_pd = (2*zeta*omega_0)/k_1;
+else
+    fprintf('No valid porblem\n');
+end
 
-A = [0 1 0; 0 0 0 ; 0 0 0];
-B = [0 0; 0 k_1; k_2 0];
-Q = [q1 0 0; 0 q2 0; 0 0 q3];
-R = [r1 0; 0 r2];
-
-C = [1 0 0; 0 0 1];
 
 
-
-
-K = lqr(A,B,Q,R)
-F = inv(C*inv(B*K-A)*B)
 

@@ -1,0 +1,7 @@
+function [s1,s2] = pole_finder(k_pp,k_pd,k_1)
+
+
+
+
+end
+

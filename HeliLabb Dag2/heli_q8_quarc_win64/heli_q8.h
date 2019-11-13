@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.62
+ * Model version              : 1.63
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Wed Oct 02 09:48:49 2019
+ * C source code generated on : Wed Nov 13 21:42:58 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -824,34 +824,25 @@
 
 /* Block signals (auto storage) */
 typedef struct {
-  real_T ElevationCounttorad;          /* '<S3>/Elevation: Count to rad' */
-  real_T Add;                          /* '<Root>/Add' */
-  real_T Integrator5;                  /* '<S5>/Integrator5' */
-  real_T PitchCounttorad;              /* '<S3>/Pitch: Count to rad' */
-  real_T Integrator3;                  /* '<S5>/Integrator3' */
-  real_T TravelCounttorad;             /* '<S3>/Travel: Count to rad' */
-  real_T Integrator1;                  /* '<S5>/Integrator1' */
+  real_T Switch;                       /* '<S3>/Switch' */
+  real_T PitchCounttorad;              /* '<S4>/Pitch: Count to rad' */
+  real_T ElevationCounttorad;          /* '<S4>/Elevation: Count to rad' */
   real_T Constant2;                    /* '<Root>/Constant2' */
   real_T Gain;                         /* '<S6>/Gain' */
-  real_T PitchTransferFcn;             /* '<S3>/Pitch: Transfer Fcn' */
+  real_T PitchTransferFcn;             /* '<S4>/Pitch: Transfer Fcn' */
+  real_T RateTransitiony;              /* '<S5>/Rate Transition: y' */
+  real_T Joystick_gain_y;              /* '<S5>/Joystick_gain_y' */
   real_T K_ep;                         /* '<S7>/K_ep' */
-  real_T ElevationTransferFcn;         /* '<S3>/Elevation: Transfer Fcn' */
+  real_T ElevationTransferFcn;         /* '<S4>/Elevation: Transfer Fcn' */
   real_T K_ei;                         /* '<S7>/K_ei' */
-  real_T TravelTransferFcn;            /* '<S3>/Travel: Transfer Fcn' */
-  real_T FrontmotorSaturation;         /* '<S3>/Front motor: Saturation' */
-  real_T BackmotorSaturation;          /* '<S3>/Back motor: Saturation' */
-  real_T Gain_k;                       /* '<S5>/Gain' */
-  real_T Gain2;                        /* '<S5>/Gain2' */
-  real_T Integrator;                   /* '<S5>/Integrator' */
-  real_T Integrator2;                  /* '<S5>/Integrator2' */
-  real_T Gain1;                        /* '<S5>/Gain1' */
-  real_T Integrator4;                  /* '<S5>/Integrator4' */
-  real_T RateTransitionx;              /* '<S4>/Rate Transition: x' */
-  real_T Joystick_gain_x;              /* '<S4>/Joystick_gain_x' */
-  real_T RateTransitiony;              /* '<S4>/Rate Transition: y' */
-  real_T Joystick_gain_y;              /* '<S4>/Joystick_gain_y' */
-  real_T GameController_o4;            /* '<S4>/Game Controller' */
-  real_T GameController_o5;            /* '<S4>/Game Controller' */
+  real_T TravelCounttorad;             /* '<S4>/Travel: Count to rad' */
+  real_T TravelTransferFcn;            /* '<S4>/Travel: Transfer Fcn' */
+  real_T FrontmotorSaturation;         /* '<S4>/Front motor: Saturation' */
+  real_T BackmotorSaturation;          /* '<S4>/Back motor: Saturation' */
+  real_T RateTransitionx;              /* '<S5>/Rate Transition: x' */
+  real_T Joystick_gain_x;              /* '<S5>/Joystick_gain_x' */
+  real_T GameController_o4;            /* '<S5>/Game Controller' */
+  real_T GameController_o5;            /* '<S5>/Game Controller' */
 } B_heli_q8_T;
 
 /* Block states (auto storage) for system '<Root>' */
@@ -864,56 +855,48 @@ typedef struct {
   real_T HILInitialize_FilterFrequency[8];/* '<Root>/HIL Initialize' */
   real_T HILInitialize_POSortedFreqs[8];/* '<Root>/HIL Initialize' */
   real_T HILInitialize_POValues[8];    /* '<Root>/HIL Initialize' */
-  real_T HILWriteAnalog_Buffer[2];     /* '<S3>/HIL Write Analog' */
-  real_T RateTransitionx_Buffer0;      /* '<S4>/Rate Transition: x' */
-  real_T RateTransitiony_Buffer0;      /* '<S4>/Rate Transition: y' */
-  t_game_controller GameController_Controller;/* '<S4>/Game Controller' */
+  real_T RateTransitiony_Buffer0;      /* '<S5>/Rate Transition: y' */
+  real_T HILWriteAnalog_Buffer[2];     /* '<S4>/HIL Write Analog' */
+  real_T RateTransitionx_Buffer0;      /* '<S5>/Rate Transition: x' */
+  t_game_controller GameController_Controller;/* '<S5>/Game Controller' */
   t_card HILInitialize_Card;           /* '<Root>/HIL Initialize' */
-  t_task HILReadEncoderTimebase_Task;  /* '<S3>/HIL Read Encoder Timebase' */
+  t_task HILReadEncoderTimebase_Task;  /* '<S4>/HIL Read Encoder Timebase' */
   struct {
     void *LoggedData[2];
-  } Elevation_PWORK;                   /* '<Root>/Elevation' */
-
-  struct {
-    void *LoggedData[2];
-  } Pitch_PWORK;                       /* '<Root>/Pitch' */
-
-  struct {
-    void *LoggedData[2];
-  } Travel_PWORK;                      /* '<Root>/Travel' */
+  } pitch_PWORK;                       /* '<Root>/pitch' */
 
   struct {
     void *LoggedData;
-  } ElevationScoperads_PWORK;          /* '<S3>/Elevation: Scope [rad//s]' */
+  } ElevationScoperads_PWORK;          /* '<S4>/Elevation: Scope [rad//s]' */
 
   struct {
     void *LoggedData;
-  } ElevationScoperad_PWORK;           /* '<S3>/Elevation: Scope [rad]' */
+  } ElevationScoperad_PWORK;           /* '<S4>/Elevation: Scope [rad]' */
 
   struct {
     void *LoggedData;
-  } PitchScoperad_PWORK;               /* '<S3>/Pitch: Scope [rad]' */
+  } PitchScoperad_PWORK;               /* '<S4>/Pitch: Scope [rad]' */
 
   struct {
     void *LoggedData;
-  } PtichrateScoperads_PWORK;          /* '<S3>/Ptich rate: Scope [rad//s]' */
+  } PtichrateScoperads_PWORK;          /* '<S4>/Ptich rate: Scope [rad//s]' */
 
   struct {
     void *LoggedData;
-  } TravelrateScoperads_PWORK;         /* '<S3>/Travel rate: Scope [rad//s]' */
+  } TravelrateScoperads_PWORK;         /* '<S4>/Travel rate: Scope [rad//s]' */
 
   struct {
     void *LoggedData;
-  } TravelScoperad_PWORK;              /* '<S3>/Travel: Scope [rad]' */
+  } TravelScoperad_PWORK;              /* '<S4>/Travel: Scope [rad]' */
 
-  void *HILWriteAnalog_PWORK;          /* '<S3>/HIL Write Analog' */
+  void *HILWriteAnalog_PWORK;          /* '<S4>/HIL Write Analog' */
   struct {
     void *LoggedData;
-  } XScope_PWORK;                      /* '<S4>/X: Scope' */
+  } XScope_PWORK;                      /* '<S5>/X: Scope' */
 
   struct {
     void *LoggedData;
-  } YScope_PWORK;                      /* '<S4>/Y: Scope' */
+  } YScope_PWORK;                      /* '<S5>/Y: Scope' */
 
   int32_T HILInitialize_ClockModes[3]; /* '<Root>/HIL Initialize' */
   int32_T HILInitialize_QuadratureModes[8];/* '<Root>/HIL Initialize' */
@@ -921,50 +904,34 @@ typedef struct {
   int32_T HILInitialize_POModeValues[8];/* '<Root>/HIL Initialize' */
   int32_T HILInitialize_POAlignValues[8];/* '<Root>/HIL Initialize' */
   int32_T HILInitialize_POPolarityVals[8];/* '<Root>/HIL Initialize' */
-  int32_T HILReadEncoderTimebase_Buffer[3];/* '<S3>/HIL Read Encoder Timebase' */
+  int32_T HILReadEncoderTimebase_Buffer[3];/* '<S4>/HIL Read Encoder Timebase' */
+  int32_T clockTickCounter;            /* '<S3>/Pulse Generator' */
+  int32_T clockTickCounter_b;          /* '<S3>/Pulse Generator1' */
   uint32_T HILInitialize_POSortedChans[8];/* '<Root>/HIL Initialize' */
 } DW_heli_q8_T;
 
 /* Continuous states (auto storage) */
 typedef struct {
-  real_T Integrator5_CSTATE;           /* '<S5>/Integrator5' */
-  real_T Integrator3_CSTATE;           /* '<S5>/Integrator3' */
-  real_T Integrator1_CSTATE;           /* '<S5>/Integrator1' */
-  real_T PitchTransferFcn_CSTATE;      /* '<S3>/Pitch: Transfer Fcn' */
+  real_T PitchTransferFcn_CSTATE;      /* '<S4>/Pitch: Transfer Fcn' */
   real_T Integrator_CSTATE;            /* '<S7>/Integrator' */
-  real_T ElevationTransferFcn_CSTATE;  /* '<S3>/Elevation: Transfer Fcn' */
-  real_T TravelTransferFcn_CSTATE;     /* '<S3>/Travel: Transfer Fcn' */
-  real_T Integrator_CSTATE_a;          /* '<S5>/Integrator' */
-  real_T Integrator2_CSTATE;           /* '<S5>/Integrator2' */
-  real_T Integrator4_CSTATE;           /* '<S5>/Integrator4' */
+  real_T ElevationTransferFcn_CSTATE;  /* '<S4>/Elevation: Transfer Fcn' */
+  real_T TravelTransferFcn_CSTATE;     /* '<S4>/Travel: Transfer Fcn' */
 } X_heli_q8_T;
 
 /* State derivatives (auto storage) */
 typedef struct {
-  real_T Integrator5_CSTATE;           /* '<S5>/Integrator5' */
-  real_T Integrator3_CSTATE;           /* '<S5>/Integrator3' */
-  real_T Integrator1_CSTATE;           /* '<S5>/Integrator1' */
-  real_T PitchTransferFcn_CSTATE;      /* '<S3>/Pitch: Transfer Fcn' */
+  real_T PitchTransferFcn_CSTATE;      /* '<S4>/Pitch: Transfer Fcn' */
   real_T Integrator_CSTATE;            /* '<S7>/Integrator' */
-  real_T ElevationTransferFcn_CSTATE;  /* '<S3>/Elevation: Transfer Fcn' */
-  real_T TravelTransferFcn_CSTATE;     /* '<S3>/Travel: Transfer Fcn' */
-  real_T Integrator_CSTATE_a;          /* '<S5>/Integrator' */
-  real_T Integrator2_CSTATE;           /* '<S5>/Integrator2' */
-  real_T Integrator4_CSTATE;           /* '<S5>/Integrator4' */
+  real_T ElevationTransferFcn_CSTATE;  /* '<S4>/Elevation: Transfer Fcn' */
+  real_T TravelTransferFcn_CSTATE;     /* '<S4>/Travel: Transfer Fcn' */
 } XDot_heli_q8_T;
 
 /* State disabled  */
 typedef struct {
-  boolean_T Integrator5_CSTATE;        /* '<S5>/Integrator5' */
-  boolean_T Integrator3_CSTATE;        /* '<S5>/Integrator3' */
-  boolean_T Integrator1_CSTATE;        /* '<S5>/Integrator1' */
-  boolean_T PitchTransferFcn_CSTATE;   /* '<S3>/Pitch: Transfer Fcn' */
+  boolean_T PitchTransferFcn_CSTATE;   /* '<S4>/Pitch: Transfer Fcn' */
   boolean_T Integrator_CSTATE;         /* '<S7>/Integrator' */
-  boolean_T ElevationTransferFcn_CSTATE;/* '<S3>/Elevation: Transfer Fcn' */
-  boolean_T TravelTransferFcn_CSTATE;  /* '<S3>/Travel: Transfer Fcn' */
-  boolean_T Integrator_CSTATE_a;       /* '<S5>/Integrator' */
-  boolean_T Integrator2_CSTATE;        /* '<S5>/Integrator2' */
-  boolean_T Integrator4_CSTATE;        /* '<S5>/Integrator4' */
+  boolean_T ElevationTransferFcn_CSTATE;/* '<S4>/Elevation: Transfer Fcn' */
+  boolean_T TravelTransferFcn_CSTATE;  /* '<S4>/Travel: Transfer Fcn' */
 } XDis_heli_q8_T;
 
 #ifndef ODE1_INTG
@@ -994,19 +961,10 @@ typedef struct {
 /* Parameters (auto storage) */
 struct P_heli_q8_T_ {
   real_T Joystick_gain_x;              /* Variable: Joystick_gain_x
-                                        * Referenced by: '<S4>/Joystick_gain_x'
+                                        * Referenced by: '<S5>/Joystick_gain_x'
                                         */
   real_T Joystick_gain_y;              /* Variable: Joystick_gain_y
-                                        * Referenced by: '<S4>/Joystick_gain_y'
-                                        */
-  real_T k_1;                          /* Variable: k_1
-                                        * Referenced by: '<S5>/Gain'
-                                        */
-  real_T k_2;                          /* Variable: k_2
-                                        * Referenced by: '<S5>/Gain1'
-                                        */
-  real_T k_3;                          /* Variable: k_3
-                                        * Referenced by: '<S5>/Gain2'
+                                        * Referenced by: '<S5>/Joystick_gain_y'
                                         */
   real_T k_pd;                         /* Variable: k_pd
                                         * Referenced by: '<S6>/Gain1'
@@ -1015,9 +973,7 @@ struct P_heli_q8_T_ {
                                         * Referenced by: '<S6>/Gain'
                                         */
   real_T v_s0;                         /* Variable: v_s0
-                                        * Referenced by:
-                                        *   '<Root>/Constant2'
-                                        *   '<S5>/Constant'
+                                        * Referenced by: '<Root>/Constant2'
                                         */
   real_T HILInitialize_analog_input_maxi;/* Mask Parameter: HILInitialize_analog_input_maxi
                                           * Referenced by: '<Root>/HIL Initialize'
@@ -1071,7 +1027,7 @@ struct P_heli_q8_T_ {
                                           * Referenced by: '<Root>/HIL Initialize'
                                           */
   int32_T HILReadEncoderTimebase_clock;/* Mask Parameter: HILReadEncoderTimebase_clock
-                                        * Referenced by: '<S3>/HIL Read Encoder Timebase'
+                                        * Referenced by: '<S4>/HIL Read Encoder Timebase'
                                         */
   int32_T HILInitialize_hardware_clocks[3];/* Mask Parameter: HILInitialize_hardware_clocks
                                             * Referenced by: '<Root>/HIL Initialize'
@@ -1101,10 +1057,10 @@ struct P_heli_q8_T_ {
                                                * Referenced by: '<Root>/HIL Initialize'
                                                */
   uint32_T HILReadEncoderTimebase_channels[3];/* Mask Parameter: HILReadEncoderTimebase_channels
-                                               * Referenced by: '<S3>/HIL Read Encoder Timebase'
+                                               * Referenced by: '<S4>/HIL Read Encoder Timebase'
                                                */
   uint32_T HILWriteAnalog_channels[2]; /* Mask Parameter: HILWriteAnalog_channels
-                                        * Referenced by: '<S3>/HIL Write Analog'
+                                        * Referenced by: '<S4>/HIL Write Analog'
                                         */
   uint32_T HILInitialize_encoder_channels[8];/* Mask Parameter: HILInitialize_encoder_channels
                                               * Referenced by: '<Root>/HIL Initialize'
@@ -1116,7 +1072,7 @@ struct P_heli_q8_T_ {
                                         * Referenced by: '<Root>/HIL Initialize'
                                         */
   uint32_T HILReadEncoderTimebase_samples_;/* Mask Parameter: HILReadEncoderTimebase_samples_
-                                            * Referenced by: '<S3>/HIL Read Encoder Timebase'
+                                            * Referenced by: '<S4>/HIL Read Encoder Timebase'
                                             */
   boolean_T HILInitialize_active;      /* Mask Parameter: HILInitialize_active
                                         * Referenced by: '<Root>/HIL Initialize'
@@ -1223,41 +1179,56 @@ struct P_heli_q8_T_ {
   boolean_T HILInitialize_set_pwm_params__f;/* Mask Parameter: HILInitialize_set_pwm_params__f
                                              * Referenced by: '<Root>/HIL Initialize'
                                              */
-  real_T elevationoffset_Value;        /* Expression: -0.515
+  real_T Gain_Gain;                    /* Expression: -1
+                                        * Referenced by: '<S3>/Gain'
+                                        */
+  real_T PulseGenerator_Amp;           /* Expression: 0.5
+                                        * Referenced by: '<S3>/Pulse Generator'
+                                        */
+  real_T PulseGenerator_Period;        /* Computed Parameter: PulseGenerator_Period
+                                        * Referenced by: '<S3>/Pulse Generator'
+                                        */
+  real_T PulseGenerator_Duty;          /* Computed Parameter: PulseGenerator_Duty
+                                        * Referenced by: '<S3>/Pulse Generator'
+                                        */
+  real_T PulseGenerator_PhaseDelay;    /* Expression: 10
+                                        * Referenced by: '<S3>/Pulse Generator'
+                                        */
+  real_T PulseGenerator1_Amp;          /* Expression: 0.5
+                                        * Referenced by: '<S3>/Pulse Generator1'
+                                        */
+  real_T PulseGenerator1_Period;       /* Computed Parameter: PulseGenerator1_Period
+                                        * Referenced by: '<S3>/Pulse Generator1'
+                                        */
+  real_T PulseGenerator1_Duty;         /* Computed Parameter: PulseGenerator1_Duty
+                                        * Referenced by: '<S3>/Pulse Generator1'
+                                        */
+  real_T PulseGenerator1_PhaseDelay;   /* Expression: 25
+                                        * Referenced by: '<S3>/Pulse Generator1'
+                                        */
+  real_T Enablepitchsquare_Value;      /* Expression: 1
+                                        * Referenced by: '<S3>/Enable pitch square'
+                                        */
+  real_T Switch_Threshold;             /* Expression: 0
+                                        * Referenced by: '<S3>/Switch'
+                                        */
+  real_T PitchCounttorad_Gain;         /* Expression: -2*pi /4096
+                                        * Referenced by: '<S4>/Pitch: Count to rad'
+                                        */
+  real_T elevationoffset_Value;        /* Expression: 0
                                         * Referenced by: '<Root>/elevation offset'
                                         */
   real_T ElevationCounttorad_Gain;     /* Expression: -2 * pi /4096
-                                        * Referenced by: '<S3>/Elevation: Count to rad'
-                                        */
-  real_T Integrator5_IC;               /* Expression: 0
-                                        * Referenced by: '<S5>/Integrator5'
-                                        */
-  real_T PitchCounttorad_Gain;         /* Expression: -2*pi /4096
-                                        * Referenced by: '<S3>/Pitch: Count to rad'
-                                        */
-  real_T Integrator3_IC;               /* Expression: 0
-                                        * Referenced by: '<S5>/Integrator3'
-                                        */
-  real_T TravelCounttorad_Gain;        /* Expression: 2*pi/8192
-                                        * Referenced by: '<S3>/Travel: Count to rad'
-                                        */
-  real_T Integrator1_IC;               /* Expression: 0
-                                        * Referenced by: '<S5>/Integrator1'
-                                        */
-  real_T Constant_Value;               /* Expression: 0
-                                        * Referenced by: '<Root>/Constant'
-                                        */
-  real_T Constant1_Value;              /* Expression: 0
-                                        * Referenced by: '<Root>/Constant1'
+                                        * Referenced by: '<S4>/Elevation: Count to rad'
                                         */
   real_T PitchTransferFcn_A;           /* Computed Parameter: PitchTransferFcn_A
-                                        * Referenced by: '<S3>/Pitch: Transfer Fcn'
+                                        * Referenced by: '<S4>/Pitch: Transfer Fcn'
                                         */
   real_T PitchTransferFcn_C;           /* Computed Parameter: PitchTransferFcn_C
-                                        * Referenced by: '<S3>/Pitch: Transfer Fcn'
+                                        * Referenced by: '<S4>/Pitch: Transfer Fcn'
                                         */
   real_T PitchTransferFcn_D;           /* Computed Parameter: PitchTransferFcn_D
-                                        * Referenced by: '<S3>/Pitch: Transfer Fcn'
+                                        * Referenced by: '<S4>/Pitch: Transfer Fcn'
                                         */
   real_T Integrator_IC;                /* Expression: 0
                                         * Referenced by: '<S7>/Integrator'
@@ -1268,17 +1239,29 @@ struct P_heli_q8_T_ {
   real_T Integrator_LowerSat;          /* Expression: -inf
                                         * Referenced by: '<S7>/Integrator'
                                         */
+  real_T RateTransitiony_X0;           /* Expression: 0
+                                        * Referenced by: '<S5>/Rate Transition: y'
+                                        */
+  real_T DeadZoney_Start;              /* Expression: -0.1
+                                        * Referenced by: '<S5>/Dead Zone: y'
+                                        */
+  real_T DeadZoney_End;                /* Expression: 0.1
+                                        * Referenced by: '<S5>/Dead Zone: y'
+                                        */
+  real_T Gainy_Gain;                   /* Expression: 10/9
+                                        * Referenced by: '<S5>/Gain: y'
+                                        */
   real_T K_ep_Gain;                    /* Expression: 15
                                         * Referenced by: '<S7>/K_ep'
                                         */
   real_T ElevationTransferFcn_A;       /* Computed Parameter: ElevationTransferFcn_A
-                                        * Referenced by: '<S3>/Elevation: Transfer Fcn'
+                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
                                         */
   real_T ElevationTransferFcn_C;       /* Computed Parameter: ElevationTransferFcn_C
-                                        * Referenced by: '<S3>/Elevation: Transfer Fcn'
+                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
                                         */
   real_T ElevationTransferFcn_D;       /* Computed Parameter: ElevationTransferFcn_D
-                                        * Referenced by: '<S3>/Elevation: Transfer Fcn'
+                                        * Referenced by: '<S4>/Elevation: Transfer Fcn'
                                         */
   real_T K_ed_Gain;                    /* Expression: 12
                                         * Referenced by: '<S7>/K_ed'
@@ -1292,77 +1275,59 @@ struct P_heli_q8_T_ {
   real_T K_ei_Gain;                    /* Expression: 5
                                         * Referenced by: '<S7>/K_ei'
                                         */
+  real_T TravelCounttorad_Gain;        /* Expression: 2*pi/8192
+                                        * Referenced by: '<S4>/Travel: Count to rad'
+                                        */
   real_T TravelTransferFcn_A;          /* Computed Parameter: TravelTransferFcn_A
-                                        * Referenced by: '<S3>/Travel: Transfer Fcn'
+                                        * Referenced by: '<S4>/Travel: Transfer Fcn'
                                         */
   real_T TravelTransferFcn_C;          /* Computed Parameter: TravelTransferFcn_C
-                                        * Referenced by: '<S3>/Travel: Transfer Fcn'
+                                        * Referenced by: '<S4>/Travel: Transfer Fcn'
                                         */
   real_T TravelTransferFcn_D;          /* Computed Parameter: TravelTransferFcn_D
-                                        * Referenced by: '<S3>/Travel: Transfer Fcn'
+                                        * Referenced by: '<S4>/Travel: Transfer Fcn'
                                         */
   real_T FrontmotorSaturation_UpperSat;/* Expression: 5
-                                        * Referenced by: '<S3>/Front motor: Saturation'
+                                        * Referenced by: '<S4>/Front motor: Saturation'
                                         */
   real_T FrontmotorSaturation_LowerSat;/* Expression: -5
-                                        * Referenced by: '<S3>/Front motor: Saturation'
+                                        * Referenced by: '<S4>/Front motor: Saturation'
                                         */
   real_T BackmotorSaturation_UpperSat; /* Expression: 5
-                                        * Referenced by: '<S3>/Back motor: Saturation'
+                                        * Referenced by: '<S4>/Back motor: Saturation'
                                         */
   real_T BackmotorSaturation_LowerSat; /* Expression: -5
-                                        * Referenced by: '<S3>/Back motor: Saturation'
-                                        */
-  real_T Integrator_IC_b;              /* Expression: 0
-                                        * Referenced by: '<S5>/Integrator'
-                                        */
-  real_T Integrator2_IC;               /* Expression: 0
-                                        * Referenced by: '<S5>/Integrator2'
-                                        */
-  real_T Integrator4_IC;               /* Expression: 0
-                                        * Referenced by: '<S5>/Integrator4'
+                                        * Referenced by: '<S4>/Back motor: Saturation'
                                         */
   real_T RateTransitionx_X0;           /* Expression: 0
-                                        * Referenced by: '<S4>/Rate Transition: x'
+                                        * Referenced by: '<S5>/Rate Transition: x'
                                         */
   real_T DeadZonex_Start;              /* Expression: -0.1
-                                        * Referenced by: '<S4>/Dead Zone: x'
+                                        * Referenced by: '<S5>/Dead Zone: x'
                                         */
   real_T DeadZonex_End;                /* Expression: 0.1
-                                        * Referenced by: '<S4>/Dead Zone: x'
+                                        * Referenced by: '<S5>/Dead Zone: x'
                                         */
   real_T Gainx_Gain;                   /* Expression: 10/9
-                                        * Referenced by: '<S4>/Gain: x'
-                                        */
-  real_T RateTransitiony_X0;           /* Expression: 0
-                                        * Referenced by: '<S4>/Rate Transition: y'
-                                        */
-  real_T DeadZoney_Start;              /* Expression: -0.1
-                                        * Referenced by: '<S4>/Dead Zone: y'
-                                        */
-  real_T DeadZoney_End;                /* Expression: 0.1
-                                        * Referenced by: '<S4>/Dead Zone: y'
-                                        */
-  real_T Gainy_Gain;                   /* Expression: 10/9
-                                        * Referenced by: '<S4>/Gain: y'
+                                        * Referenced by: '<S5>/Gain: x'
                                         */
   uint16_T GameController_BufferSize;  /* Computed Parameter: GameController_BufferSize
-                                        * Referenced by: '<S4>/Game Controller'
+                                        * Referenced by: '<S5>/Game Controller'
                                         */
   uint8_T GameController_ControllerNumber;/* Computed Parameter: GameController_ControllerNumber
-                                           * Referenced by: '<S4>/Game Controller'
+                                           * Referenced by: '<S5>/Game Controller'
                                            */
   boolean_T HILReadEncoderTimebase_Active;/* Computed Parameter: HILReadEncoderTimebase_Active
-                                           * Referenced by: '<S3>/HIL Read Encoder Timebase'
+                                           * Referenced by: '<S4>/HIL Read Encoder Timebase'
                                            */
   boolean_T HILWriteAnalog_Active;     /* Computed Parameter: HILWriteAnalog_Active
-                                        * Referenced by: '<S3>/HIL Write Analog'
+                                        * Referenced by: '<S4>/HIL Write Analog'
                                         */
   boolean_T GameController_AutoCenter; /* Computed Parameter: GameController_AutoCenter
-                                        * Referenced by: '<S4>/Game Controller'
+                                        * Referenced by: '<S5>/Game Controller'
                                         */
   boolean_T GameController_Enabled;    /* Computed Parameter: GameController_Enabled
-                                        * Referenced by: '<S4>/Game Controller'
+                                        * Referenced by: '<S5>/Game Controller'
                                         */
 };
 
@@ -1399,7 +1364,7 @@ struct tag_RTM_heli_q8_T {
     boolean_T zCCacheNeedsReset;
     boolean_T derivCacheNeedsReset;
     boolean_T blkStateChange;
-    real_T odeF[1][10];
+    real_T odeF[1][4];
     ODE1_IntgData intgData;
     void *dwork;
   } ModelData;
@@ -1545,9 +1510,9 @@ extern RT_MODEL_heli_q8_T *const heli_q8_M;
  * '<Root>' : 'heli_q8'
  * '<S1>'   : 'heli_q8/Conversion'
  * '<S2>'   : 'heli_q8/Elevation controller'
- * '<S3>'   : 'heli_q8/Heli 3D'
- * '<S4>'   : 'heli_q8/Joystick'
- * '<S5>'   : 'heli_q8/Linearization'
+ * '<S3>'   : 'heli_q8/Generate pitch ref'
+ * '<S4>'   : 'heli_q8/Heli 3D'
+ * '<S5>'   : 'heli_q8/Joystick'
  * '<S6>'   : 'heli_q8/Pitch controller'
  * '<S7>'   : 'heli_q8/Elevation controller/Elevation controller'
  */
