@@ -13,8 +13,8 @@
 
 %%%%%%%%%%% Calibration of the encoder and the hardware for the specific
 %%%%%%%%%%% helicopter
-Joystick_gain_x = 1;
-Joystick_gain_y = 1;
+Joystick_gain_x = 0.5;
+Joystick_gain_y = 0.5;
 
 
 %%%%%%%%%%% Physical constants
@@ -25,7 +25,10 @@ l_p = 0.175; % distance pitch axis to motor [m]
 m_c = 1.92; % Counterweight mass [kg]
 m_p = 0.72; % Motor mass [kg]
 
-v_s0 = 7.7;
+v_s0 = 7.7; 
+
+J_p=2*m_p*l_p^2;
+J_e=m_c*l_c^2+2*m_p*l_p^2;
 
 k_f = (2*m_p*g*l_h-m_c*g*l_c)/(l_h*v_s0); % Motor constant
 k_1 = k_f/(2*m_p*l_p); % 
@@ -64,6 +67,7 @@ q2_aug = 0.1;
 q3_aug = 100;
 q4_aug = 20;
 q5_aug = 1;
+ 
 r2_aug = 1;
 r1_aug = 1;
 
@@ -81,7 +85,7 @@ F_aug = inv(C*inv(B*K_aug_K1-A)*B);
 %%Day 4
 
 %  is linked to the individual computer and found in Device Manager
-PORT = 4; 
+PORT = 3; 
 
 %Prob 3 - Observability
 J_lambda = m_c*l_c^2+2*m_p*(l_h^2+l_p^2);
@@ -98,44 +102,44 @@ O_matrix = obsv(A,C);
 %Prob 6 - Noise
 
 %Load results from linearization IMU
-pitch_rate_imu_lin = load('Prob6/linearization_point_new_filter/pitch_rate_imu.mat','ans');
+pitch_rate_imu_lin = load('Prob6/linearization_point/pitch_rate_imu.mat','ans');
 pitch_rate_imu_lin = transpose(pitch_rate_imu_lin.ans);
 pitch_rate_imu_lin = pitch_rate_imu_lin(:,2);
 
-pitch_imu_lin = load('Prob6/linearization_point_new_filter/pitch_imu.mat','ans');
+pitch_imu_lin = load('Prob6/linearization_point/pitch_imu.mat','ans');
 pitch_imu_lin = transpose(pitch_imu_lin.ans);
 pitch_imu_lin = pitch_imu_lin(:,2);
 
-elevation_rate_imu_lin = load('Prob6/linearization_point_new_filter/elevation_rate_imu.mat','ans');
+elevation_rate_imu_lin = load('Prob6/linearization_point/elevation_rate_imu.mat','ans');
 elevation_rate_imu_lin = transpose(elevation_rate_imu_lin.ans);
 elevation_rate_imu_lin = elevation_rate_imu_lin(:,2);
 
-elevation_imu_lin = load('Prob6/linearization_point_new_filter/elevation_imu.mat','ans');
+elevation_imu_lin = load('Prob6/linearization_point/elevation_imu.mat','ans');
 elevation_imu_lin = transpose(elevation_imu_lin.ans);
 elevation_imu_lin = elevation_imu_lin(:,2);
 
-travel_rate_imu_lin = load('Prob6/linearization_point_new_filter/travel_rate_imu.mat','ans');
+travel_rate_imu_lin = load('Prob6/linearization_point/travel_rate_imu.mat','ans');
 travel_rate_imu_lin = transpose(travel_rate_imu_lin.ans);
 travel_rate_imu_lin = travel_rate_imu_lin(:,2);
 
 %Load results from linearization Encoder
-pitch_rate_encoder_lin = load('Prob6/linearization_point_new_filter/pitch_rate_encoder.mat','ans');
+pitch_rate_encoder_lin = load('Prob6/linearization_point/pitch_rate_encoder.mat','ans');
 pitch_rate_encoder_lin = transpose(pitch_rate_encoder_lin.ans);
 pitch_rate_encoder_lin = pitch_rate_encoder_lin(:,2);
 
-pitch_encoder_lin = load('Prob6/linearization_point_new_filter/pitch_encoder.mat','ans');
+pitch_encoder_lin = load('Prob6/linearization_point/pitch_encoder.mat','ans');
 pitch_encoder_lin = transpose(pitch_encoder_lin.ans);
 pitch_encoder_lin = pitch_encoder_lin(:,2);
 
-elevation_rate_encoder_lin = load('Prob6/linearization_point_new_filter/elevation_rate_encoder.mat','ans');
+elevation_rate_encoder_lin = load('Prob6/linearization_point/elevation_rate_encoder.mat','ans');
 elevation_rate_encoder_lin = transpose(elevation_rate_encoder_lin.ans);
 elevation_rate_encoder_lin = elevation_rate_encoder_lin(:,2);
 
-elevation_encoder_lin = load('Prob6/linearization_point_new_filter/elevation_encoder.mat','ans');
+elevation_encoder_lin = load('Prob6/linearization_point/elevation_encoder.mat','ans');
 elevation_encoder_lin = transpose(elevation_encoder_lin.ans);
 elevation_encoder_lin = elevation_encoder_lin(:,2);
 
-travel_rate_encoder_lin = load('Prob6/linearization_point_new_filter/travel_rate_encoder.mat','ans');
+travel_rate_encoder_lin = load('Prob6/linearization_point/travel_rate_encoder.mat','ans');
 travel_rate_encoder_lin = transpose(travel_rate_encoder_lin.ans);
 travel_rate_encoder_lin = travel_rate_encoder_lin(:,2);
 
@@ -148,44 +152,44 @@ V_E_lin = nancov(M_E);
 
 
 %Load results from stationary point and calculate covariances
-pitch_rate_imu_stat = load('Prob6/stationary_new_filter/pitch_rate_imu.mat','ans');
+pitch_rate_imu_stat = load('Prob6/stationary/pitch_rate_imu.mat','ans');
 pitch_rate_imu_stat = transpose(pitch_rate_imu_stat.ans);
 pitch_rate_imu_stat = pitch_rate_imu_stat(:,2);
 
-pitch_imu_stat = load('Prob6/stationary_new_filter/pitch_imu.mat','ans');
+pitch_imu_stat = load('Prob6/stationary/pitch_imu.mat','ans');
 pitch_imu_stat = transpose(pitch_imu_stat.ans);
 pitch_imu_stat = pitch_imu_stat(:,2);
 
-elevation_rate_imu_stat = load('Prob6/stationary_new_filter/elevation_rate_imu.mat','ans');
+elevation_rate_imu_stat = load('Prob6/stationary/elevation_rate_imu.mat','ans');
 elevation_rate_imu_stat = transpose(elevation_rate_imu_stat.ans);
 elevation_rate_imu_stat = elevation_rate_imu_stat(:,2);
 
-elevation_imu_stat = load('Prob6/stationary_new_filter/elevation_imu.mat','ans');
+elevation_imu_stat = load('Prob6/stationary/elevation_imu.mat','ans');
 elevation_imu_stat = transpose(elevation_imu_stat.ans);
 elevation_imu_stat = elevation_imu_stat(:,2);
 
-travel_rate_imu_stat = load('Prob6/stationary_new_filter/travel_rate_imu.mat','ans');
+travel_rate_imu_stat = load('Prob6/stationary/travel_rate_imu.mat','ans');
 travel_rate_imu_stat = transpose(travel_rate_imu_stat.ans);
 travel_rate_imu_stat = travel_rate_imu_stat(:,2);
 
 %Load results from linearization Encoder
-pitch_rate_encoder_stat = load('Prob6/stationary_new_filter/pitch_rate_encoder.mat','ans');
+pitch_rate_encoder_stat = load('Prob6/stationary/pitch_rate_encoder.mat','ans');
 pitch_rate_encoder_stat = transpose(pitch_rate_encoder_stat.ans);
 pitch_rate_encoder_stat = pitch_rate_encoder_stat(:,2);
 
-pitch_encoder_stat = load('Prob6/stationary_new_filter/pitch_encoder.mat','ans');
+pitch_encoder_stat = load('Prob6/stationary/pitch_encoder.mat','ans');
 pitch_encoder_stat = transpose(pitch_encoder_stat.ans);
 pitch_encoder_stat = pitch_encoder_stat(:,2);
 
-elevation_rate_encoder_stat = load('Prob6/stationary_new_filter/elevation_rate_encoder.mat','ans');
+elevation_rate_encoder_stat = load('Prob6/stationary/elevation_rate_encoder.mat','ans');
 elevation_rate_encoder_stat = transpose(elevation_rate_encoder_stat.ans);
 elevation_rate_encoder_stat = elevation_rate_encoder_stat(:,2);
 
-elevation_encoder_stat = load('Prob6/stationary_new_filter/elevation_encoder.mat','ans');
+elevation_encoder_stat = load('Prob6/stationary/elevation_encoder.mat','ans');
 elevation_encoder_stat = transpose(elevation_encoder_stat.ans);
 elevation_encoder_stat = elevation_encoder_stat(:,2);
 
-travel_rate_encoder_stat = load('Prob6/stationary_new_filter/travel_rate_encoder.mat','ans');
+travel_rate_encoder_stat = load('Prob6/stationary/travel_rate_encoder.mat','ans');
 travel_rate_encoder_stat = transpose(travel_rate_encoder_stat.ans);
 travel_rate_encoder_stat = travel_rate_encoder_stat(:,2);
 
@@ -222,7 +226,7 @@ for i = 1:5/0.002
     P_1 = A_d*P_1*transpose(A_d)+ Q_d;
 end
 
-P_1;
+P_1
 
 
 Q_d_2 = [5 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 0; 0 0 0 1 0 0; 0 0 0 0 1 0; 0 0 0 0 0 1];
@@ -232,7 +236,7 @@ for i = 1:5/0.002
     P_2 = A_d*P_2*transpose(A_d)+ Q_d_2;
 end
 
-P_2;
+P_2
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -243,4 +247,54 @@ P_2;
 R_d = V_I_lin;  
 
 %Task 3 - Varying Q_d
-Q_d = [0.001 0 0 0 0 0; 0 1 0 0 0 0; 0 0 0.001 0 0 0; 0 0 0 0.001 0 0; 0 0 0 0 1 0; 0 0 0 0 0 1]
+Q_d = [0.005 0 0 0 0 0; 0 0.01 0 0 0 0; 0 0 0.001 0 0 0; 0 0 0 0.001 0 0; 0 0 0 0 1 0; 0 0 0 0 0 0.5] 
+%%
+%Plotting Kalman Estimates vs Encoder values
+
+%load all measurements
+p_est = load('KalmanFilter/p_est.mat');
+p_enc = load('KalmanFilter/p_enc.mat');
+
+pr_est = load('KalmanFilter/pr_est.mat');
+pr_enc = load('KalmanFilter/pr_enc.mat');
+
+e_est = load('KalmanFilter/e_est.mat');
+e_enc = load('KalmanFilter/e_enc.mat');
+
+er_est = load('KalmanFilter/er_est.mat');
+er_enc = load('KalmanFilter/er_enc.mat');
+
+t_est = load('KalmanFilter/t_est.mat');
+t_enc = load('KalmanFilter/t_enc.mat');
+
+tr_est = load('KalmanFilter/tr_est.mat');
+tr_enc = load('KalmanFilter/tr_enc.mat');
+
+plotter(p_est,p_enc, 'Pitch', 'KalmanFilter\');
+plotter(pr_est,pr_enc, 'Pitch rate', 'KalmanFilter\');
+plotter(e_est,e_enc,'Elevation', 'KalmanFilter\');
+plotter(er_est,er_enc,'Elevation rate', 'KalmanFilter\');
+plotter(t_est,t_enc,'Travel', 'KalmanFilter\');
+plotter(tr_est,tr_enc, 'Travel rate', 'KalmanFilter\');
+
+%%
+p_est_LQR = load('LQR/p_est.mat');
+p_ref_LQR = load('LQR/p_ref.mat');
+
+pr_est_LQR = load('LQR/pr_est.mat');
+
+e_est_LQR = load('LQR/e_est.mat');
+
+er_est_LQR = load('LQR/er_est.mat');
+er_ref_LQR = load('LQR/er_ref.mat');
+
+t_est_LQR = load('LQR/t_est.mat');
+
+tr_est_LQR = load('LQR/tr_est.mat');
+
+plotter(p_est_LQR, p_ref_LQR, 'Pitch', 'LQR\','Refrence');
+plotter_single(pr_est_LQR, 'Pitch rate', 'LQR\');
+plotter_single(e_est_LQR, 'Elevation', 'LQR\');
+plotter(er_est_LQR,er_ref_LQR,'Elevation rate', 'LQR\','Refrence');
+plotter_single(t_est_LQR,'Travel', 'LQR\');
+plotter_single(tr_est_LQR, 'Travel rate', 'LQR\');

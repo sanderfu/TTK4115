@@ -1,0 +1,20 @@
+function plotter(est,enc,title_text)
+%UNTITLED Summary of this function goes here
+%   Detailed explanation goes here
+f1 = figure;
+x_text = 'time [s]';
+est = transpose(est.ans);
+enc = transpose(enc.ans);
+
+
+
+plot(est.,est.signals.values,enc.time,enc.signals.values), xlabel(x_text), title(title_text), legend('Estimate', 'Encoder');
+grid on;
+savefig(strcat(title_text,'.fig'));
+saveas(gcf,strcat(title_text,'.png'));
+
+
+
+
+end
+
