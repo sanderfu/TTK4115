@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.110
+ * Model version              : 1.113
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Sun Nov 10 22:33:10 2019
+ * C source code generated on : Thu Nov 14 01:42:33 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -32,6 +32,9 @@ X_heli_q8_T heli_q8_X;
 
 /* Block states (auto storage) */
 DW_heli_q8_T heli_q8_DW;
+
+/* Previous zero-crossings (trigger) states */
+PrevZCX_heli_q8_T heli_q8_PrevZCX;
 
 /* Real-time model */
 RT_MODEL_heli_q8_T heli_q8_M_;
@@ -180,7 +183,8 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
   /* local block i/o variables */
   real_T rtb_HILReadEncoderTimebase_o1;
   real_T rtb_HILReadEncoderTimebase_o2;
-  real_T rtb_Sqrt;
+  real_T rtb_FrontmotorSaturation;
+  real_T rtb_BackmotorSaturation;
   t_stream_ptr rtb_StreamCall1_o1;
   t_stream_ptr rtb_StreamFormattedWrite_o1;
   real32_T rtb_StreamRead1_o2[10];
@@ -188,16 +192,16 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
   int32_T rtb_StreamCall1_o3;
   int32_T rtb_StreamRead1_o5;
   boolean_T rtb_StreamRead1_o3;
-  real_T rtb_Backgain;
   real_T rtb_Switch[10];
+  real_T rtb_Add;
   int32_T i;
   real_T tmp[9];
-  real_T tmp_0[6];
+  real_T tmp_0[2];
   real_T tmp_1[6];
-  real_T tmp_2[36];
+  real_T tmp_2[6];
+  real_T tmp_3[36];
   int32_T i_0;
   int32_T i_1;
-  real_T u0;
   if (rtmIsMajorTimeStep(heli_q8_M)) {
     /* set solver stop time */
     if (!(heli_q8_M->Timing.clockTick0+1)) {
@@ -221,6 +225,8 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
     heli_q8_M->Timing.t[0] = rtsiGetT(&heli_q8_M->solverInfo);
   }
 
+  /* Reset subsysRan breadcrumbs */
+  srClearBC(heli_q8_DW.SampleandHold_SubsysRanBC);
   if (rtmIsMajorTimeStep(heli_q8_M)) {
     /* S-Function (hil_read_encoder_timebase_block): '<S3>/HIL Read Encoder Timebase' */
 
@@ -238,73 +244,9 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
           heli_q8_DW.HILReadEncoderTimebase_Buffer[0];
         rtb_HILReadEncoderTimebase_o2 =
           heli_q8_DW.HILReadEncoderTimebase_Buffer[1];
-        rtb_Sqrt = heli_q8_DW.HILReadEncoderTimebase_Buffer[2];
+        rtb_FrontmotorSaturation = heli_q8_DW.HILReadEncoderTimebase_Buffer[2];
       }
     }
-
-    /* UnitDelay: '<Root>/Unit Delay' */
-    for (i = 0; i < 6; i++) {
-      heli_q8_B.UnitDelay[i] = heli_q8_DW.UnitDelay_DSTATE[i];
-    }
-
-    /* End of UnitDelay: '<Root>/Unit Delay' */
-
-    /* Gain: '<S3>/Elevation: Count to rad' */
-    heli_q8_B.ElevationCounttorad = heli_q8_P.ElevationCounttorad_Gain *
-      rtb_Sqrt;
-
-    /* Sum: '<Root>/Add' incorporates:
-     *  Constant: '<Root>/elevation offset'
-     */
-    heli_q8_B.Add = heli_q8_P.elevationoffset_Value +
-      heli_q8_B.ElevationCounttorad;
-  }
-
-  /* TransferFcn: '<S3>/Elevation: Transfer Fcn' */
-  heli_q8_B.ElevationTransferFcn = 0.0;
-  heli_q8_B.ElevationTransferFcn += heli_q8_P.ElevationTransferFcn_C *
-    heli_q8_X.ElevationTransferFcn_CSTATE;
-  heli_q8_B.ElevationTransferFcn += heli_q8_P.ElevationTransferFcn_D *
-    heli_q8_B.ElevationCounttorad;
-  if (rtmIsMajorTimeStep(heli_q8_M)) {
-    /* Gain: '<S3>/Pitch: Count to rad' */
-    heli_q8_B.PitchCounttorad = heli_q8_P.PitchCounttorad_Gain *
-      rtb_HILReadEncoderTimebase_o2;
-  }
-
-  /* TransferFcn: '<S3>/Pitch: Transfer Fcn' */
-  heli_q8_B.PitchTransferFcn = 0.0;
-  heli_q8_B.PitchTransferFcn += heli_q8_P.PitchTransferFcn_C *
-    heli_q8_X.PitchTransferFcn_CSTATE;
-  heli_q8_B.PitchTransferFcn += heli_q8_P.PitchTransferFcn_D *
-    heli_q8_B.PitchCounttorad;
-  if (rtmIsMajorTimeStep(heli_q8_M)) {
-    /* Gain: '<S3>/Travel: Count to rad' */
-    heli_q8_B.TravelCounttorad = heli_q8_P.TravelCounttorad_Gain *
-      rtb_HILReadEncoderTimebase_o1;
-  }
-
-  /* TransferFcn: '<S3>/Travel: Transfer Fcn' */
-  heli_q8_B.TravelTransferFcn = 0.0;
-  heli_q8_B.TravelTransferFcn += heli_q8_P.TravelTransferFcn_C *
-    heli_q8_X.TravelTransferFcn_CSTATE;
-  heli_q8_B.TravelTransferFcn += heli_q8_P.TravelTransferFcn_D *
-    heli_q8_B.TravelCounttorad;
-  if (rtmIsMajorTimeStep(heli_q8_M)) {
-    /* UnitDelay: '<Root>/Unit Delay1' */
-    memcpy(&heli_q8_B.UnitDelay1[0], &heli_q8_DW.UnitDelay1_DSTATE[0], 36U *
-           sizeof(real_T));
-
-    /* Gain: '<S9>/Gain' */
-    for (i = 0; i < 6; i++) {
-      heli_q8_B.Gain[i] = 0.0;
-      for (i_0 = 0; i_0 < 6; i_0++) {
-        heli_q8_B.Gain[i] += heli_q8_B.UnitDelay1[6 * i_0 + i] *
-          heli_q8_P.Gain_Gain[i_0];
-      }
-    }
-
-    /* End of Gain: '<S9>/Gain' */
 
     /* RateTransition: '<S5>/Rate Transition: x' */
     if (heli_q8_M->Timing.RateInteraction.TID1_2) {
@@ -315,11 +257,13 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
 
     /* DeadZone: '<S5>/Dead Zone: x' */
     if (heli_q8_B.RateTransitionx > heli_q8_P.DeadZonex_End) {
-      rtb_Sqrt = heli_q8_B.RateTransitionx - heli_q8_P.DeadZonex_End;
+      rtb_BackmotorSaturation = heli_q8_B.RateTransitionx -
+        heli_q8_P.DeadZonex_End;
     } else if (heli_q8_B.RateTransitionx >= heli_q8_P.DeadZonex_Start) {
-      rtb_Sqrt = 0.0;
+      rtb_BackmotorSaturation = 0.0;
     } else {
-      rtb_Sqrt = heli_q8_B.RateTransitionx - heli_q8_P.DeadZonex_Start;
+      rtb_BackmotorSaturation = heli_q8_B.RateTransitionx -
+        heli_q8_P.DeadZonex_Start;
     }
 
     /* End of DeadZone: '<S5>/Dead Zone: x' */
@@ -327,7 +271,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
     /* Gain: '<S5>/Joystick_gain_x' incorporates:
      *  Gain: '<S5>/Gain: x'
      */
-    heli_q8_B.Joystick_gain_x = heli_q8_P.Gainx_Gain * rtb_Sqrt *
+    heli_q8_B.Joystick_gain_x = heli_q8_P.Gainx_Gain * rtb_BackmotorSaturation *
       heli_q8_P.Joystick_gain_x;
 
     /* RateTransition: '<S5>/Rate Transition: y' */
@@ -339,11 +283,13 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
 
     /* DeadZone: '<S5>/Dead Zone: y' */
     if (heli_q8_B.RateTransitiony > heli_q8_P.DeadZoney_End) {
-      rtb_Sqrt = heli_q8_B.RateTransitiony - heli_q8_P.DeadZoney_End;
+      rtb_BackmotorSaturation = heli_q8_B.RateTransitiony -
+        heli_q8_P.DeadZoney_End;
     } else if (heli_q8_B.RateTransitiony >= heli_q8_P.DeadZoney_Start) {
-      rtb_Sqrt = 0.0;
+      rtb_BackmotorSaturation = 0.0;
     } else {
-      rtb_Sqrt = heli_q8_B.RateTransitiony - heli_q8_P.DeadZoney_Start;
+      rtb_BackmotorSaturation = heli_q8_B.RateTransitiony -
+        heli_q8_P.DeadZoney_Start;
     }
 
     /* End of DeadZone: '<S5>/Dead Zone: y' */
@@ -351,48 +297,9 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
     /* Gain: '<S5>/Joystick_gain_y' incorporates:
      *  Gain: '<S5>/Gain: y'
      */
-    heli_q8_B.Joystick_gain_y = heli_q8_P.Gainy_Gain * rtb_Sqrt *
+    heli_q8_B.Joystick_gain_y = heli_q8_P.Gainy_Gain * rtb_BackmotorSaturation *
       heli_q8_P.Joystick_gain_y;
 
-    /* Gain: '<S7>/Gain' incorporates:
-     *  SignalConversion: '<S7>/TmpSignal ConversionAtGainInport1'
-     */
-    heli_q8_B.Gain_d[0] = 0.0;
-    heli_q8_B.Gain_d[0] += heli_q8_P.F[0] * heli_q8_B.Joystick_gain_x;
-    heli_q8_B.Gain_d[0] += heli_q8_P.F[2] * heli_q8_B.Joystick_gain_y;
-    heli_q8_B.Gain_d[1] = 0.0;
-    heli_q8_B.Gain_d[1] += heli_q8_P.F[1] * heli_q8_B.Joystick_gain_x;
-    heli_q8_B.Gain_d[1] += heli_q8_P.F[3] * heli_q8_B.Joystick_gain_y;
-  }
-
-  /* Sum: '<S7>/Sum1' incorporates:
-   *  Gain: '<S7>/Gain1'
-   *  SignalConversion: '<S7>/TmpSignal ConversionAtGain1Inport1'
-   */
-  for (i = 0; i < 2; i++) {
-    heli_q8_B.Sum1[i] = heli_q8_B.Gain_d[i] - ((heli_q8_P.K[i + 2] *
-      heli_q8_B.PitchTransferFcn + heli_q8_P.K[i] * heli_q8_B.PitchCounttorad) +
-      heli_q8_P.K[i + 4] * heli_q8_B.ElevationTransferFcn);
-  }
-
-  /* End of Sum: '<S7>/Sum1' */
-  if (rtmIsMajorTimeStep(heli_q8_M)) {
-    /* Constant: '<Root>/Constant' */
-    memcpy(&heli_q8_B.Constant[0], &heli_q8_P.A_d[0], 36U * sizeof(real_T));
-
-    /* Constant: '<Root>/Constant1' */
-    memcpy(&heli_q8_B.Constant1[0], &heli_q8_P.B_d[0], 12U * sizeof(real_T));
-
-    /* Constant: '<Root>/Constant2' */
-    memcpy(&heli_q8_B.Constant2[0], &heli_q8_P.Q_d[0], 36U * sizeof(real_T));
-
-    /* Constant: '<S7>/Constant2' */
-    heli_q8_B.Constant2_k = heli_q8_P.v_s0;
-  }
-
-  /* Sum: '<S7>/Sum2' */
-  rtb_Backgain = heli_q8_B.Constant2_k + heli_q8_B.Sum1[0];
-  if (rtmIsMajorTimeStep(heli_q8_M)) {
     /* S-Function (stream_call_block): '<S4>/Stream Call1' */
 
     /* S-Function Block: heli_q8/IMU/Stream Call1 (stream_call_block) */
@@ -546,6 +453,24 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
 
     /* End of Gain: '<S4>/Gain1' */
 
+    /* Gain: '<S3>/Pitch: Count to rad' */
+    heli_q8_B.PitchCounttorad = heli_q8_P.PitchCounttorad_Gain *
+      rtb_HILReadEncoderTimebase_o2;
+
+    /* Gain: '<S3>/Elevation: Count to rad' */
+    heli_q8_B.ElevationCounttorad = heli_q8_P.ElevationCounttorad_Gain *
+      rtb_FrontmotorSaturation;
+
+    /* Sum: '<Root>/Add' incorporates:
+     *  Constant: '<Root>/elevation offset'
+     */
+    heli_q8_B.Add = heli_q8_P.elevationoffset_Value +
+      heli_q8_B.ElevationCounttorad;
+
+    /* Gain: '<S3>/Travel: Count to rad' */
+    heli_q8_B.TravelCounttorad = heli_q8_P.TravelCounttorad_Gain *
+      rtb_HILReadEncoderTimebase_o1;
+
     /* MATLAB Function: '<Root>/Gyro vector to [pitch rate, elevation rate, tra vle rate]' incorporates:
      *  SignalConversion: '<S2>/TmpSignal ConversionAt SFunction Inport2'
      */
@@ -566,53 +491,153 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
     tmp[8] = cos(heli_q8_B.PitchCounttorad) / cos(heli_q8_B.Add);
     for (i = 0; i < 3; i++) {
       heli_q8_B.euler_rates[i] = 0.0;
+
+      /* Gain: '<S4>/Gain2' */
+      heli_q8_B.Gain2[i] = 0.0;
       heli_q8_B.euler_rates[i] += tmp[i] * heli_q8_B.Gain1[0];
+
+      /* Gain: '<S4>/Gain2' */
+      heli_q8_B.Gain2[i] += heli_q8_P.Gain2_Gain[i] * rtb_Switch[0];
       heli_q8_B.euler_rates[i] += tmp[i + 3] * heli_q8_B.Gain1[1];
+
+      /* Gain: '<S4>/Gain2' */
+      heli_q8_B.Gain2[i] += heli_q8_P.Gain2_Gain[i + 3] * rtb_Switch[1];
       heli_q8_B.euler_rates[i] += tmp[i + 6] * heli_q8_B.Gain1[2];
+
+      /* Gain: '<S4>/Gain2' */
+      heli_q8_B.Gain2[i] += heli_q8_P.Gain2_Gain[i + 6] * rtb_Switch[2];
     }
 
     /* End of MATLAB Function: '<Root>/Gyro vector to [pitch rate, elevation rate, tra vle rate]' */
+
+    /* Trigonometry: '<S6>/Trigonometric Function' incorporates:
+     *  Product: '<S6>/Divide'
+     */
+    heli_q8_B.TrigonometricFunction = atan(heli_q8_B.Gain2[1] / heli_q8_B.Gain2
+      [2]);
+
+    /* Sum: '<S6>/Sum' incorporates:
+     *  Math: '<S6>/Math Function'
+     *  Math: '<S6>/Math Function1'
+     */
+    rtb_BackmotorSaturation = heli_q8_B.Gain2[1] * heli_q8_B.Gain2[1] +
+      heli_q8_B.Gain2[2] * heli_q8_B.Gain2[2];
+
+    /* Sqrt: '<S6>/Sqrt' */
+    rtb_BackmotorSaturation = sqrt(rtb_BackmotorSaturation);
+
+    /* Trigonometry: '<S6>/e' */
+    heli_q8_B.e = rt_atan2d_snf(heli_q8_B.Gain2[0], rtb_BackmotorSaturation);
+
+    /* Outputs for Triggered SubSystem: '<Root>/Sample and Hold' incorporates:
+     *  TriggerPort: '<S9>/Trigger'
+     */
+    if (rtmIsMajorTimeStep(heli_q8_M)) {
+      if (rtb_StreamRead1_o3 && (heli_q8_PrevZCX.SampleandHold_Trig_ZCE !=
+           POS_ZCSIG)) {
+        /* Inport: '<S9>/In' */
+        heli_q8_B.In[0] = heli_q8_B.euler_rates[0];
+        heli_q8_B.In[1] = heli_q8_B.euler_rates[1];
+        heli_q8_B.In[2] = heli_q8_B.euler_rates[2];
+        heli_q8_B.In[3] = heli_q8_B.TrigonometricFunction;
+        heli_q8_B.In[4] = heli_q8_B.e;
+        heli_q8_DW.SampleandHold_SubsysRanBC = 4;
+      }
+
+      heli_q8_PrevZCX.SampleandHold_Trig_ZCE = rtb_StreamRead1_o3;
+    }
+
+    /* End of Outputs for SubSystem: '<Root>/Sample and Hold' */
+
+    /* Gain: '<S7>/Gain' incorporates:
+     *  SignalConversion: '<S7>/TmpSignal ConversionAtGainInport1'
+     *  Sum: '<S7>/Sum1'
+     */
+    tmp_0[0] = heli_q8_P.F[0] * heli_q8_B.Joystick_gain_x + heli_q8_P.F[2] *
+      heli_q8_B.Joystick_gain_y;
+    tmp_0[1] = heli_q8_P.F[1] * heli_q8_B.Joystick_gain_x;
+    tmp_0[1] += heli_q8_P.F[3] * heli_q8_B.Joystick_gain_y;
+    for (i = 0; i < 2; i++) {
+      /* Sum: '<S7>/Sum1' incorporates:
+       *  Gain: '<S7>/Gain1'
+       *  SignalConversion: '<S7>/TmpSignal ConversionAtGain1Inport1'
+       */
+      heli_q8_B.Sum1[i] = tmp_0[i] - (heli_q8_P.K[i + 4] * heli_q8_B.In[1] +
+        (heli_q8_P.K[i + 2] * heli_q8_B.In[0] + heli_q8_P.K[i] * heli_q8_B.In[3]));
+    }
+
+    /* Sum: '<S7>/Sum2' incorporates:
+     *  Constant: '<S7>/Constant2'
+     */
+    rtb_BackmotorSaturation = heli_q8_P.v_s0 + heli_q8_B.Sum1[0];
+
+    /* Sum: '<S1>/Add' */
+    rtb_Add = rtb_BackmotorSaturation - heli_q8_B.Sum1[1];
+
+    /* Gain: '<S1>/Back gain' incorporates:
+     *  Sum: '<S1>/Subtract'
+     */
+    rtb_BackmotorSaturation = (rtb_BackmotorSaturation + heli_q8_B.Sum1[1]) *
+      heli_q8_P.Backgain_Gain;
+
+    /* Gain: '<S1>/Front gain' */
+    rtb_FrontmotorSaturation = heli_q8_P.Frontgain_Gain * rtb_Add;
   }
 
-  /* Gain: '<S1>/Front gain' incorporates:
-   *  Sum: '<S1>/Add'
-   */
-  u0 = (rtb_Backgain - heli_q8_B.Sum1[1]) * heli_q8_P.Frontgain_Gain;
-
-  /* Saturate: '<S3>/Front motor: Saturation' */
-  if (u0 > heli_q8_P.FrontmotorSaturation_UpperSat) {
-    heli_q8_B.FrontmotorSaturation = heli_q8_P.FrontmotorSaturation_UpperSat;
-  } else if (u0 < heli_q8_P.FrontmotorSaturation_LowerSat) {
-    heli_q8_B.FrontmotorSaturation = heli_q8_P.FrontmotorSaturation_LowerSat;
-  } else {
-    heli_q8_B.FrontmotorSaturation = u0;
-  }
-
-  /* End of Saturate: '<S3>/Front motor: Saturation' */
-
-  /* Gain: '<S1>/Back gain' incorporates:
-   *  Sum: '<S1>/Subtract'
-   */
-  u0 = (rtb_Backgain + heli_q8_B.Sum1[1]) * heli_q8_P.Backgain_Gain;
-
-  /* Saturate: '<S3>/Back motor: Saturation' */
-  if (u0 > heli_q8_P.BackmotorSaturation_UpperSat) {
-    heli_q8_B.BackmotorSaturation = heli_q8_P.BackmotorSaturation_UpperSat;
-  } else if (u0 < heli_q8_P.BackmotorSaturation_LowerSat) {
-    heli_q8_B.BackmotorSaturation = heli_q8_P.BackmotorSaturation_LowerSat;
-  } else {
-    heli_q8_B.BackmotorSaturation = u0;
-  }
-
-  /* End of Saturate: '<S3>/Back motor: Saturation' */
+  /* TransferFcn: '<S3>/Elevation: Transfer Fcn' */
+  heli_q8_B.ElevationTransferFcn = 0.0;
+  heli_q8_B.ElevationTransferFcn += heli_q8_P.ElevationTransferFcn_C *
+    heli_q8_X.ElevationTransferFcn_CSTATE;
+  heli_q8_B.ElevationTransferFcn += heli_q8_P.ElevationTransferFcn_D *
+    heli_q8_B.ElevationCounttorad;
   if (rtmIsMajorTimeStep(heli_q8_M)) {
+  }
+
+  /* TransferFcn: '<S3>/Pitch: Transfer Fcn' */
+  heli_q8_B.PitchTransferFcn = 0.0;
+  heli_q8_B.PitchTransferFcn += heli_q8_P.PitchTransferFcn_C *
+    heli_q8_X.PitchTransferFcn_CSTATE;
+  heli_q8_B.PitchTransferFcn += heli_q8_P.PitchTransferFcn_D *
+    heli_q8_B.PitchCounttorad;
+  if (rtmIsMajorTimeStep(heli_q8_M)) {
+  }
+
+  /* TransferFcn: '<S3>/Travel: Transfer Fcn' */
+  heli_q8_B.TravelTransferFcn = 0.0;
+  heli_q8_B.TravelTransferFcn += heli_q8_P.TravelTransferFcn_C *
+    heli_q8_X.TravelTransferFcn_CSTATE;
+  heli_q8_B.TravelTransferFcn += heli_q8_P.TravelTransferFcn_D *
+    heli_q8_B.TravelCounttorad;
+  if (rtmIsMajorTimeStep(heli_q8_M)) {
+    /* Saturate: '<S3>/Front motor: Saturation' */
+    if (rtb_FrontmotorSaturation > heli_q8_P.FrontmotorSaturation_UpperSat) {
+      rtb_FrontmotorSaturation = heli_q8_P.FrontmotorSaturation_UpperSat;
+    } else {
+      if (rtb_FrontmotorSaturation < heli_q8_P.FrontmotorSaturation_LowerSat) {
+        rtb_FrontmotorSaturation = heli_q8_P.FrontmotorSaturation_LowerSat;
+      }
+    }
+
+    /* End of Saturate: '<S3>/Front motor: Saturation' */
+
+    /* Saturate: '<S3>/Back motor: Saturation' */
+    if (rtb_BackmotorSaturation > heli_q8_P.BackmotorSaturation_UpperSat) {
+      rtb_BackmotorSaturation = heli_q8_P.BackmotorSaturation_UpperSat;
+    } else {
+      if (rtb_BackmotorSaturation < heli_q8_P.BackmotorSaturation_LowerSat) {
+        rtb_BackmotorSaturation = heli_q8_P.BackmotorSaturation_LowerSat;
+      }
+    }
+
+    /* End of Saturate: '<S3>/Back motor: Saturation' */
+
     /* S-Function (hil_write_analog_block): '<S3>/HIL Write Analog' */
 
     /* S-Function Block: heli_q8/Heli 3D/HIL Write Analog (hil_write_analog_block) */
     {
       t_error result;
-      heli_q8_DW.HILWriteAnalog_Buffer[0] = heli_q8_B.FrontmotorSaturation;
-      heli_q8_DW.HILWriteAnalog_Buffer[1] = heli_q8_B.BackmotorSaturation;
+      heli_q8_DW.HILWriteAnalog_Buffer[0] = rtb_FrontmotorSaturation;
+      heli_q8_DW.HILWriteAnalog_Buffer[1] = rtb_BackmotorSaturation;
       result = hil_write_analog(heli_q8_DW.HILInitialize_Card,
         heli_q8_P.HILWriteAnalog_channels, 2, &heli_q8_DW.HILWriteAnalog_Buffer
         [0]);
@@ -647,59 +672,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
       }
     }
 
-    /* Gain: '<S4>/Gain2' */
-    for (i = 0; i < 3; i++) {
-      heli_q8_B.Gain2[i] = 0.0;
-      heli_q8_B.Gain2[i] += heli_q8_P.Gain2_Gain[i] * rtb_Switch[0];
-      heli_q8_B.Gain2[i] += heli_q8_P.Gain2_Gain[i + 3] * rtb_Switch[1];
-      heli_q8_B.Gain2[i] += heli_q8_P.Gain2_Gain[i + 6] * rtb_Switch[2];
-    }
-
-    /* End of Gain: '<S4>/Gain2' */
-  }
-
-  /* MATLAB Function: '<Root>/MATLAB Function' */
-  /* MATLAB Function 'MATLAB Function': '<S6>:1' */
-  /* '<S6>:1:5' */
-  /* '<S6>:1:6' */
-  for (i = 0; i < 6; i++) {
-    tmp_0[i] = 0.0;
-    tmp_1[i] = 0.0;
-    tmp_1[i] += heli_q8_B.Constant1[i] * heli_q8_B.Sum1[0];
-    tmp_1[i] += heli_q8_B.Constant1[i + 6] * heli_q8_B.Sum1[1];
-    for (i_0 = 0; i_0 < 6; i_0++) {
-      tmp_0[i] += heli_q8_B.Constant[6 * i_0 + i] * heli_q8_B.UnitDelay[i_0];
-      tmp_2[i + 6 * i_0] = 0.0;
-      for (i_1 = 0; i_1 < 6; i_1++) {
-        tmp_2[i + 6 * i_0] += heli_q8_B.Constant[6 * i_1 + i] *
-          heli_q8_B.UnitDelay1[6 * i_0 + i_1];
-      }
-    }
-
-    heli_q8_B.x_k_plus_1_bar[i] = tmp_0[i] + tmp_1[i];
-  }
-
-  for (i = 0; i < 6; i++) {
-    for (i_0 = 0; i_0 < 6; i_0++) {
-      rtb_Backgain = 0.0;
-      for (i_1 = 0; i_1 < 6; i_1++) {
-        rtb_Backgain += tmp_2[6 * i_1 + i] * heli_q8_B.Constant[6 * i_1 + i_0];
-      }
-
-      heli_q8_B.P_bar_k_plus_1[i + 6 * i_0] = heli_q8_B.Constant2[6 * i_0 + i] +
-        rtb_Backgain;
-    }
-  }
-
-  /* End of MATLAB Function: '<Root>/MATLAB Function' */
-  if (rtmIsMajorTimeStep(heli_q8_M)) {
-    /* Trigonometry: '<S8>/Trigonometric Function' incorporates:
-     *  Product: '<S8>/Divide'
-     */
-    heli_q8_B.TrigonometricFunction = atan(heli_q8_B.Gain2[1] / heli_q8_B.Gain2
-      [2]);
-
-    /* ToFile: '<S8>/To File3' */
+    /* ToFile: '<S6>/To File3' */
     if (rtmIsMajorTimeStep(heli_q8_M)) {
       {
         if (!(++heli_q8_DW.ToFile3_IWORK.Decimation % 1) &&
@@ -728,20 +701,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
       }
     }
 
-    /* Sum: '<S8>/Sum' incorporates:
-     *  Math: '<S8>/Math Function'
-     *  Math: '<S8>/Math Function1'
-     */
-    rtb_Sqrt = heli_q8_B.Gain2[1] * heli_q8_B.Gain2[1] + heli_q8_B.Gain2[2] *
-      heli_q8_B.Gain2[2];
-
-    /* Sqrt: '<S8>/Sqrt' */
-    rtb_Sqrt = sqrt(rtb_Sqrt);
-
-    /* Trigonometry: '<S8>/e' */
-    heli_q8_B.e = rt_atan2d_snf(heli_q8_B.Gain2[0], rtb_Sqrt);
-
-    /* ToFile: '<S8>/To File4' */
+    /* ToFile: '<S6>/To File4' */
     if (rtmIsMajorTimeStep(heli_q8_M)) {
       {
         if (!(++heli_q8_DW.ToFile4_IWORK.Decimation % 1) &&
@@ -770,7 +730,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
       }
     }
 
-    /* ToFile: '<S8>/To File' */
+    /* ToFile: '<S6>/To File' */
     if (rtmIsMajorTimeStep(heli_q8_M)) {
       {
         if (!(++heli_q8_DW.ToFile_IWORK.Decimation % 1) &&
@@ -799,7 +759,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
       }
     }
 
-    /* ToFile: '<S8>/To File1' */
+    /* ToFile: '<S6>/To File1' */
     if (rtmIsMajorTimeStep(heli_q8_M)) {
       {
         if (!(++heli_q8_DW.ToFile1_IWORK.Decimation % 1) &&
@@ -828,7 +788,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
       }
     }
 
-    /* ToFile: '<S8>/To File2' */
+    /* ToFile: '<S6>/To File2' */
     if (rtmIsMajorTimeStep(heli_q8_M)) {
       {
         if (!(++heli_q8_DW.ToFile2_IWORK.Decimation % 1) &&
@@ -857,7 +817,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
       }
     }
 
-    /* ToFile: '<S8>/To File5' */
+    /* ToFile: '<S6>/To File5' */
     if (rtmIsMajorTimeStep(heli_q8_M)) {
       {
         if (!(++heli_q8_DW.ToFile5_IWORK.Decimation % 1) &&
@@ -886,7 +846,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
       }
     }
 
-    /* ToFile: '<S8>/To File6' */
+    /* ToFile: '<S6>/To File6' */
     if (rtmIsMajorTimeStep(heli_q8_M)) {
       {
         if (!(++heli_q8_DW.ToFile6_IWORK.Decimation % 1) &&
@@ -915,7 +875,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
       }
     }
 
-    /* ToFile: '<S8>/To File7' */
+    /* ToFile: '<S6>/To File7' */
     if (rtmIsMajorTimeStep(heli_q8_M)) {
       {
         if (!(++heli_q8_DW.ToFile7_IWORK.Decimation % 1) &&
@@ -945,20 +905,20 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
     }
   }
 
-  /* Gain: '<S8>/Gain1' */
+  /* Gain: '<S6>/Gain1' */
   heli_q8_B.Gain1_f = heli_q8_P.Gain1_Gain_c * heli_q8_B.ElevationTransferFcn;
   if (rtmIsMajorTimeStep(heli_q8_M)) {
   }
 
-  /* Gain: '<S8>/Gain2' */
+  /* Gain: '<S6>/Gain2' */
   heli_q8_B.Gain2_p = heli_q8_P.Gain2_Gain_l * heli_q8_B.PitchTransferFcn;
   if (rtmIsMajorTimeStep(heli_q8_M)) {
   }
 
-  /* Gain: '<S8>/Gain' */
-  heli_q8_B.Gain_g = heli_q8_P.Gain_Gain_l * heli_q8_B.TravelTransferFcn;
+  /* Gain: '<S6>/Gain' */
+  heli_q8_B.Gain = heli_q8_P.Gain_Gain * heli_q8_B.TravelTransferFcn;
   if (rtmIsMajorTimeStep(heli_q8_M)) {
-    /* ToFile: '<S8>/To File8' */
+    /* ToFile: '<S6>/To File8' */
     if (rtmIsMajorTimeStep(heli_q8_M)) {
       {
         if (!(++heli_q8_DW.ToFile8_IWORK.Decimation % 1) &&
@@ -987,7 +947,7 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
       }
     }
 
-    /* ToFile: '<S8>/To File9' */
+    /* ToFile: '<S6>/To File9' */
     if (rtmIsMajorTimeStep(heli_q8_M)) {
       {
         if (!(++heli_q8_DW.ToFile9_IWORK.Decimation % 1) &&
@@ -1015,6 +975,66 @@ void heli_q8_output0(void)             /* Sample time: [0.0s, 0.0s] */
         }
       }
     }
+
+    /* UnitDelay: '<S8>/Unit Delay' */
+    for (i = 0; i < 6; i++) {
+      heli_q8_B.UnitDelay[i] = heli_q8_DW.UnitDelay_DSTATE[i];
+    }
+
+    /* End of UnitDelay: '<S8>/Unit Delay' */
+
+    /* Gain: '<S10>/Gain' incorporates:
+     *  UnitDelay: '<S8>/Unit Delay1'
+     */
+    for (i = 0; i < 6; i++) {
+      heli_q8_B.Gain_d[i] = 0.0;
+      for (i_0 = 0; i_0 < 6; i_0++) {
+        heli_q8_B.Gain_d[i] += heli_q8_DW.UnitDelay1_DSTATE[6 * i_0 + i] *
+          heli_q8_P.Gain_Gain_l[i_0];
+      }
+    }
+
+    /* End of Gain: '<S10>/Gain' */
+
+    /* MATLAB Function: '<S8>/MATLAB Function' incorporates:
+     *  Constant: '<S8>/Constant'
+     *  Constant: '<S8>/Constant1'
+     *  Constant: '<S8>/Constant2'
+     *  UnitDelay: '<S8>/Unit Delay1'
+     */
+    /* MATLAB Function 'Open loop observer/MATLAB Function': '<S11>:1' */
+    /* '<S11>:1:5' */
+    /* '<S11>:1:6' */
+    for (i = 0; i < 6; i++) {
+      tmp_1[i] = 0.0;
+      tmp_2[i] = 0.0;
+      tmp_2[i] += heli_q8_P.B_d[i] * heli_q8_B.Sum1[0];
+      tmp_2[i] += heli_q8_P.B_d[i + 6] * heli_q8_B.Sum1[1];
+      for (i_0 = 0; i_0 < 6; i_0++) {
+        tmp_1[i] += heli_q8_P.A_d[6 * i_0 + i] * heli_q8_B.UnitDelay[i_0];
+        tmp_3[i + 6 * i_0] = 0.0;
+        for (i_1 = 0; i_1 < 6; i_1++) {
+          tmp_3[i + 6 * i_0] += heli_q8_P.A_d[6 * i_1 + i] *
+            heli_q8_DW.UnitDelay1_DSTATE[6 * i_0 + i_1];
+        }
+      }
+
+      heli_q8_B.x_k_plus_1_bar[i] = tmp_1[i] + tmp_2[i];
+    }
+
+    for (i = 0; i < 6; i++) {
+      for (i_0 = 0; i_0 < 6; i_0++) {
+        rtb_Add = 0.0;
+        for (i_1 = 0; i_1 < 6; i_1++) {
+          rtb_Add += tmp_3[6 * i_1 + i] * heli_q8_P.A_d[6 * i_1 + i_0];
+        }
+
+        heli_q8_B.P_bar_k_plus_1[i + 6 * i_0] = heli_q8_P.Q_d[6 * i_0 + i] +
+          rtb_Add;
+      }
+    }
+
+    /* End of MATLAB Function: '<S8>/MATLAB Function' */
   }
 }
 
@@ -1023,14 +1043,14 @@ void heli_q8_update0(void)             /* Sample time: [0.0s, 0.0s] */
 {
   int32_T i;
   if (rtmIsMajorTimeStep(heli_q8_M)) {
-    /* Update for UnitDelay: '<Root>/Unit Delay' */
+    /* Update for UnitDelay: '<S8>/Unit Delay' */
     for (i = 0; i < 6; i++) {
       heli_q8_DW.UnitDelay_DSTATE[i] = heli_q8_B.x_k_plus_1_bar[i];
     }
 
-    /* End of Update for UnitDelay: '<Root>/Unit Delay' */
+    /* End of Update for UnitDelay: '<S8>/Unit Delay' */
 
-    /* Update for UnitDelay: '<Root>/Unit Delay1' */
+    /* Update for UnitDelay: '<S8>/Unit Delay1' */
     memcpy(&heli_q8_DW.UnitDelay1_DSTATE[0], &heli_q8_B.P_bar_k_plus_1[0], 36U *
            sizeof(real_T));
   }
@@ -1185,200 +1205,16 @@ void heli_q8_update(int_T tid)
 /* Model initialize function */
 void heli_q8_initialize(void)
 {
-  /* Start for S-Function (hil_initialize_block): '<Root>/HIL Initialize' */
-
-  /* S-Function Block: heli_q8/HIL Initialize (hil_initialize_block) */
   {
-    t_int result;
-    t_boolean is_switching;
-    result = hil_open("q8_usb", "0", &heli_q8_DW.HILInitialize_Card);
-    if (result < 0) {
-      msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-        (_rt_error_message));
-      rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-      return;
-    }
+    int32_T i;
 
-    is_switching = false;
-    result = hil_set_card_specific_options(heli_q8_DW.HILInitialize_Card,
-      "update_rate=normal;decimation=1", 32);
-    if (result < 0) {
-      msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-        (_rt_error_message));
-      rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-      return;
-    }
+    /* Start for S-Function (hil_initialize_block): '<Root>/HIL Initialize' */
 
-    result = hil_watchdog_clear(heli_q8_DW.HILInitialize_Card);
-    if (result < 0 && result != -QERR_HIL_WATCHDOG_CLEAR) {
-      msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-        (_rt_error_message));
-      rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-      return;
-    }
-
-    if ((heli_q8_P.HILInitialize_set_analog_input_ && !is_switching) ||
-        (heli_q8_P.HILInitialize_set_analog_inpu_m && is_switching)) {
-      {
-        int_T i1;
-        real_T *dw_AIMinimums = &heli_q8_DW.HILInitialize_AIMinimums[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_AIMinimums[i1] = heli_q8_P.HILInitialize_analog_input_mini;
-        }
-      }
-
-      {
-        int_T i1;
-        real_T *dw_AIMaximums = &heli_q8_DW.HILInitialize_AIMaximums[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_AIMaximums[i1] = heli_q8_P.HILInitialize_analog_input_maxi;
-        }
-      }
-
-      result = hil_set_analog_input_ranges(heli_q8_DW.HILInitialize_Card,
-        heli_q8_P.HILInitialize_analog_input_chan, 8U,
-        &heli_q8_DW.HILInitialize_AIMinimums[0],
-        &heli_q8_DW.HILInitialize_AIMaximums[0]);
-      if (result < 0) {
-        msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-          (_rt_error_message));
-        rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-        return;
-      }
-    }
-
-    if ((heli_q8_P.HILInitialize_set_analog_output && !is_switching) ||
-        (heli_q8_P.HILInitialize_set_analog_outp_b && is_switching)) {
-      {
-        int_T i1;
-        real_T *dw_AOMinimums = &heli_q8_DW.HILInitialize_AOMinimums[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_AOMinimums[i1] = heli_q8_P.HILInitialize_analog_output_min;
-        }
-      }
-
-      {
-        int_T i1;
-        real_T *dw_AOMaximums = &heli_q8_DW.HILInitialize_AOMaximums[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_AOMaximums[i1] = heli_q8_P.HILInitialize_analog_output_max;
-        }
-      }
-
-      result = hil_set_analog_output_ranges(heli_q8_DW.HILInitialize_Card,
-        heli_q8_P.HILInitialize_analog_output_cha, 8U,
-        &heli_q8_DW.HILInitialize_AOMinimums[0],
-        &heli_q8_DW.HILInitialize_AOMaximums[0]);
-      if (result < 0) {
-        msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-          (_rt_error_message));
-        rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-        return;
-      }
-    }
-
-    if ((heli_q8_P.HILInitialize_set_analog_outp_e && !is_switching) ||
-        (heli_q8_P.HILInitialize_set_analog_outp_j && is_switching)) {
-      {
-        int_T i1;
-        real_T *dw_AOVoltages = &heli_q8_DW.HILInitialize_AOVoltages[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_AOVoltages[i1] = heli_q8_P.HILInitialize_initial_analog_ou;
-        }
-      }
-
-      result = hil_write_analog(heli_q8_DW.HILInitialize_Card,
-        heli_q8_P.HILInitialize_analog_output_cha, 8U,
-        &heli_q8_DW.HILInitialize_AOVoltages[0]);
-      if (result < 0) {
-        msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-          (_rt_error_message));
-        rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-        return;
-      }
-    }
-
-    if (heli_q8_P.HILInitialize_set_analog_outp_p) {
-      {
-        int_T i1;
-        real_T *dw_AOVoltages = &heli_q8_DW.HILInitialize_AOVoltages[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_AOVoltages[i1] = heli_q8_P.HILInitialize_watchdog_analog_o;
-        }
-      }
-
-      result = hil_watchdog_set_analog_expiration_state
-        (heli_q8_DW.HILInitialize_Card,
-         heli_q8_P.HILInitialize_analog_output_cha, 8U,
-         &heli_q8_DW.HILInitialize_AOVoltages[0]);
-      if (result < 0) {
-        msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-          (_rt_error_message));
-        rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-        return;
-      }
-    }
-
-    if ((heli_q8_P.HILInitialize_set_encoder_param && !is_switching) ||
-        (heli_q8_P.HILInitialize_set_encoder_par_m && is_switching)) {
-      {
-        int_T i1;
-        int32_T *dw_QuadratureModes = &heli_q8_DW.HILInitialize_QuadratureModes
-          [0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_QuadratureModes[i1] = heli_q8_P.HILInitialize_quadrature;
-        }
-      }
-
-      result = hil_set_encoder_quadrature_mode(heli_q8_DW.HILInitialize_Card,
-        heli_q8_P.HILInitialize_encoder_channels, 8U, (t_encoder_quadrature_mode
-        *) &heli_q8_DW.HILInitialize_QuadratureModes[0]);
-      if (result < 0) {
-        msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-          (_rt_error_message));
-        rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-        return;
-      }
-    }
-
-    if ((heli_q8_P.HILInitialize_set_encoder_count && !is_switching) ||
-        (heli_q8_P.HILInitialize_set_encoder_cou_k && is_switching)) {
-      {
-        int_T i1;
-        int32_T *dw_InitialEICounts = &heli_q8_DW.HILInitialize_InitialEICounts
-          [0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_InitialEICounts[i1] = heli_q8_P.HILInitialize_initial_encoder_c;
-        }
-      }
-
-      result = hil_set_encoder_counts(heli_q8_DW.HILInitialize_Card,
-        heli_q8_P.HILInitialize_encoder_channels, 8U,
-        &heli_q8_DW.HILInitialize_InitialEICounts[0]);
-      if (result < 0) {
-        msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-          (_rt_error_message));
-        rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-        return;
-      }
-    }
-
-    if ((heli_q8_P.HILInitialize_set_pwm_params_at && !is_switching) ||
-        (heli_q8_P.HILInitialize_set_pwm_params__f && is_switching)) {
-      uint32_T num_duty_cycle_modes = 0;
-      uint32_T num_frequency_modes = 0;
-
-      {
-        int_T i1;
-        int32_T *dw_POModeValues = &heli_q8_DW.HILInitialize_POModeValues[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_POModeValues[i1] = heli_q8_P.HILInitialize_pwm_modes;
-        }
-      }
-
-      result = hil_set_pwm_mode(heli_q8_DW.HILInitialize_Card,
-        heli_q8_P.HILInitialize_pwm_channels, 8U, (t_pwm_mode *)
-        &heli_q8_DW.HILInitialize_POModeValues[0]);
+    /* S-Function Block: heli_q8/HIL Initialize (hil_initialize_block) */
+    {
+      t_int result;
+      t_boolean is_switching;
+      result = hil_open("q8_usb", "0", &heli_q8_DW.HILInitialize_Card);
       if (result < 0) {
         msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
           (_rt_error_message));
@@ -1386,33 +1222,46 @@ void heli_q8_initialize(void)
         return;
       }
 
-      {
-        int_T i1;
-        const uint32_T *p_HILInitialize_pwm_channels =
-          heli_q8_P.HILInitialize_pwm_channels;
-        int32_T *dw_POModeValues = &heli_q8_DW.HILInitialize_POModeValues[0];
-        for (i1=0; i1 < 8; i1++) {
-          if (dw_POModeValues[i1] == PWM_DUTY_CYCLE_MODE || dw_POModeValues[i1] ==
-              PWM_ONE_SHOT_MODE || dw_POModeValues[i1] == PWM_TIME_MODE) {
-            heli_q8_DW.HILInitialize_POSortedChans[num_duty_cycle_modes] =
-              p_HILInitialize_pwm_channels[i1];
-            heli_q8_DW.HILInitialize_POSortedFreqs[num_duty_cycle_modes] =
-              heli_q8_P.HILInitialize_pwm_frequency;
-            num_duty_cycle_modes++;
-          } else {
-            heli_q8_DW.HILInitialize_POSortedChans[7U - num_frequency_modes] =
-              p_HILInitialize_pwm_channels[i1];
-            heli_q8_DW.HILInitialize_POSortedFreqs[7U - num_frequency_modes] =
-              heli_q8_P.HILInitialize_pwm_frequency;
-            num_frequency_modes++;
+      is_switching = false;
+      result = hil_set_card_specific_options(heli_q8_DW.HILInitialize_Card,
+        "update_rate=normal;decimation=1", 32);
+      if (result < 0) {
+        msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+          (_rt_error_message));
+        rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+        return;
+      }
+
+      result = hil_watchdog_clear(heli_q8_DW.HILInitialize_Card);
+      if (result < 0 && result != -QERR_HIL_WATCHDOG_CLEAR) {
+        msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+          (_rt_error_message));
+        rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+        return;
+      }
+
+      if ((heli_q8_P.HILInitialize_set_analog_input_ && !is_switching) ||
+          (heli_q8_P.HILInitialize_set_analog_inpu_m && is_switching)) {
+        {
+          int_T i1;
+          real_T *dw_AIMinimums = &heli_q8_DW.HILInitialize_AIMinimums[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_AIMinimums[i1] = heli_q8_P.HILInitialize_analog_input_mini;
           }
         }
-      }
 
-      if (num_duty_cycle_modes > 0) {
-        result = hil_set_pwm_frequency(heli_q8_DW.HILInitialize_Card,
-          &heli_q8_DW.HILInitialize_POSortedChans[0], num_duty_cycle_modes,
-          &heli_q8_DW.HILInitialize_POSortedFreqs[0]);
+        {
+          int_T i1;
+          real_T *dw_AIMaximums = &heli_q8_DW.HILInitialize_AIMaximums[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_AIMaximums[i1] = heli_q8_P.HILInitialize_analog_input_maxi;
+          }
+        }
+
+        result = hil_set_analog_input_ranges(heli_q8_DW.HILInitialize_Card,
+          heli_q8_P.HILInitialize_analog_input_chan, 8U,
+          &heli_q8_DW.HILInitialize_AIMinimums[0],
+          &heli_q8_DW.HILInitialize_AIMaximums[0]);
         if (result < 0) {
           msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
             (_rt_error_message));
@@ -1421,11 +1270,28 @@ void heli_q8_initialize(void)
         }
       }
 
-      if (num_frequency_modes > 0) {
-        result = hil_set_pwm_duty_cycle(heli_q8_DW.HILInitialize_Card,
-          &heli_q8_DW.HILInitialize_POSortedChans[num_duty_cycle_modes],
-          num_frequency_modes,
-          &heli_q8_DW.HILInitialize_POSortedFreqs[num_duty_cycle_modes]);
+      if ((heli_q8_P.HILInitialize_set_analog_output && !is_switching) ||
+          (heli_q8_P.HILInitialize_set_analog_outp_b && is_switching)) {
+        {
+          int_T i1;
+          real_T *dw_AOMinimums = &heli_q8_DW.HILInitialize_AOMinimums[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_AOMinimums[i1] = heli_q8_P.HILInitialize_analog_output_min;
+          }
+        }
+
+        {
+          int_T i1;
+          real_T *dw_AOMaximums = &heli_q8_DW.HILInitialize_AOMaximums[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_AOMaximums[i1] = heli_q8_P.HILInitialize_analog_output_max;
+          }
+        }
+
+        result = hil_set_analog_output_ranges(heli_q8_DW.HILInitialize_Card,
+          heli_q8_P.HILInitialize_analog_output_cha, 8U,
+          &heli_q8_DW.HILInitialize_AOMinimums[0],
+          &heli_q8_DW.HILInitialize_AOMaximums[0]);
         if (result < 0) {
           msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
             (_rt_error_message));
@@ -1434,395 +1300,558 @@ void heli_q8_initialize(void)
         }
       }
 
-      {
-        int_T i1;
-        int32_T *dw_POModeValues = &heli_q8_DW.HILInitialize_POModeValues[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_POModeValues[i1] = heli_q8_P.HILInitialize_pwm_configuration;
+      if ((heli_q8_P.HILInitialize_set_analog_outp_e && !is_switching) ||
+          (heli_q8_P.HILInitialize_set_analog_outp_j && is_switching)) {
+        {
+          int_T i1;
+          real_T *dw_AOVoltages = &heli_q8_DW.HILInitialize_AOVoltages[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_AOVoltages[i1] = heli_q8_P.HILInitialize_initial_analog_ou;
+          }
+        }
+
+        result = hil_write_analog(heli_q8_DW.HILInitialize_Card,
+          heli_q8_P.HILInitialize_analog_output_cha, 8U,
+          &heli_q8_DW.HILInitialize_AOVoltages[0]);
+        if (result < 0) {
+          msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+            (_rt_error_message));
+          rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+          return;
         }
       }
 
-      {
-        int_T i1;
-        int32_T *dw_POAlignValues = &heli_q8_DW.HILInitialize_POAlignValues[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_POAlignValues[i1] = heli_q8_P.HILInitialize_pwm_alignment;
+      if (heli_q8_P.HILInitialize_set_analog_outp_p) {
+        {
+          int_T i1;
+          real_T *dw_AOVoltages = &heli_q8_DW.HILInitialize_AOVoltages[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_AOVoltages[i1] = heli_q8_P.HILInitialize_watchdog_analog_o;
+          }
+        }
+
+        result = hil_watchdog_set_analog_expiration_state
+          (heli_q8_DW.HILInitialize_Card,
+           heli_q8_P.HILInitialize_analog_output_cha, 8U,
+           &heli_q8_DW.HILInitialize_AOVoltages[0]);
+        if (result < 0) {
+          msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+            (_rt_error_message));
+          rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+          return;
         }
       }
 
-      {
-        int_T i1;
-        int32_T *dw_POPolarityVals = &heli_q8_DW.HILInitialize_POPolarityVals[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_POPolarityVals[i1] = heli_q8_P.HILInitialize_pwm_polarity;
+      if ((heli_q8_P.HILInitialize_set_encoder_param && !is_switching) ||
+          (heli_q8_P.HILInitialize_set_encoder_par_m && is_switching)) {
+        {
+          int_T i1;
+          int32_T *dw_QuadratureModes =
+            &heli_q8_DW.HILInitialize_QuadratureModes[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_QuadratureModes[i1] = heli_q8_P.HILInitialize_quadrature;
+          }
+        }
+
+        result = hil_set_encoder_quadrature_mode(heli_q8_DW.HILInitialize_Card,
+          heli_q8_P.HILInitialize_encoder_channels, 8U,
+          (t_encoder_quadrature_mode *)
+          &heli_q8_DW.HILInitialize_QuadratureModes[0]);
+        if (result < 0) {
+          msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+            (_rt_error_message));
+          rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+          return;
         }
       }
 
-      result = hil_set_pwm_configuration(heli_q8_DW.HILInitialize_Card,
-        heli_q8_P.HILInitialize_pwm_channels, 8U,
-        (t_pwm_configuration *) &heli_q8_DW.HILInitialize_POModeValues[0],
-        (t_pwm_alignment *) &heli_q8_DW.HILInitialize_POAlignValues[0],
-        (t_pwm_polarity *) &heli_q8_DW.HILInitialize_POPolarityVals[0]);
-      if (result < 0) {
-        msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-          (_rt_error_message));
-        rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-        return;
-      }
+      if ((heli_q8_P.HILInitialize_set_encoder_count && !is_switching) ||
+          (heli_q8_P.HILInitialize_set_encoder_cou_k && is_switching)) {
+        {
+          int_T i1;
+          int32_T *dw_InitialEICounts =
+            &heli_q8_DW.HILInitialize_InitialEICounts[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_InitialEICounts[i1] = heli_q8_P.HILInitialize_initial_encoder_c;
+          }
+        }
 
-      {
-        int_T i1;
-        real_T *dw_POSortedFreqs = &heli_q8_DW.HILInitialize_POSortedFreqs[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_POSortedFreqs[i1] = heli_q8_P.HILInitialize_pwm_leading_deadb;
+        result = hil_set_encoder_counts(heli_q8_DW.HILInitialize_Card,
+          heli_q8_P.HILInitialize_encoder_channels, 8U,
+          &heli_q8_DW.HILInitialize_InitialEICounts[0]);
+        if (result < 0) {
+          msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+            (_rt_error_message));
+          rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+          return;
         }
       }
 
-      {
-        int_T i1;
-        real_T *dw_POValues = &heli_q8_DW.HILInitialize_POValues[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_POValues[i1] = heli_q8_P.HILInitialize_pwm_trailing_dead;
+      if ((heli_q8_P.HILInitialize_set_pwm_params_at && !is_switching) ||
+          (heli_q8_P.HILInitialize_set_pwm_params__f && is_switching)) {
+        uint32_T num_duty_cycle_modes = 0;
+        uint32_T num_frequency_modes = 0;
+
+        {
+          int_T i1;
+          int32_T *dw_POModeValues = &heli_q8_DW.HILInitialize_POModeValues[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_POModeValues[i1] = heli_q8_P.HILInitialize_pwm_modes;
+          }
+        }
+
+        result = hil_set_pwm_mode(heli_q8_DW.HILInitialize_Card,
+          heli_q8_P.HILInitialize_pwm_channels, 8U, (t_pwm_mode *)
+          &heli_q8_DW.HILInitialize_POModeValues[0]);
+        if (result < 0) {
+          msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+            (_rt_error_message));
+          rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+          return;
+        }
+
+        {
+          int_T i1;
+          const uint32_T *p_HILInitialize_pwm_channels =
+            heli_q8_P.HILInitialize_pwm_channels;
+          int32_T *dw_POModeValues = &heli_q8_DW.HILInitialize_POModeValues[0];
+          for (i1=0; i1 < 8; i1++) {
+            if (dw_POModeValues[i1] == PWM_DUTY_CYCLE_MODE || dw_POModeValues[i1]
+                == PWM_ONE_SHOT_MODE || dw_POModeValues[i1] == PWM_TIME_MODE) {
+              heli_q8_DW.HILInitialize_POSortedChans[num_duty_cycle_modes] =
+                p_HILInitialize_pwm_channels[i1];
+              heli_q8_DW.HILInitialize_POSortedFreqs[num_duty_cycle_modes] =
+                heli_q8_P.HILInitialize_pwm_frequency;
+              num_duty_cycle_modes++;
+            } else {
+              heli_q8_DW.HILInitialize_POSortedChans[7U - num_frequency_modes] =
+                p_HILInitialize_pwm_channels[i1];
+              heli_q8_DW.HILInitialize_POSortedFreqs[7U - num_frequency_modes] =
+                heli_q8_P.HILInitialize_pwm_frequency;
+              num_frequency_modes++;
+            }
+          }
+        }
+
+        if (num_duty_cycle_modes > 0) {
+          result = hil_set_pwm_frequency(heli_q8_DW.HILInitialize_Card,
+            &heli_q8_DW.HILInitialize_POSortedChans[0], num_duty_cycle_modes,
+            &heli_q8_DW.HILInitialize_POSortedFreqs[0]);
+          if (result < 0) {
+            msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+              (_rt_error_message));
+            rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+            return;
+          }
+        }
+
+        if (num_frequency_modes > 0) {
+          result = hil_set_pwm_duty_cycle(heli_q8_DW.HILInitialize_Card,
+            &heli_q8_DW.HILInitialize_POSortedChans[num_duty_cycle_modes],
+            num_frequency_modes,
+            &heli_q8_DW.HILInitialize_POSortedFreqs[num_duty_cycle_modes]);
+          if (result < 0) {
+            msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+              (_rt_error_message));
+            rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+            return;
+          }
+        }
+
+        {
+          int_T i1;
+          int32_T *dw_POModeValues = &heli_q8_DW.HILInitialize_POModeValues[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_POModeValues[i1] = heli_q8_P.HILInitialize_pwm_configuration;
+          }
+        }
+
+        {
+          int_T i1;
+          int32_T *dw_POAlignValues = &heli_q8_DW.HILInitialize_POAlignValues[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_POAlignValues[i1] = heli_q8_P.HILInitialize_pwm_alignment;
+          }
+        }
+
+        {
+          int_T i1;
+          int32_T *dw_POPolarityVals = &heli_q8_DW.HILInitialize_POPolarityVals
+            [0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_POPolarityVals[i1] = heli_q8_P.HILInitialize_pwm_polarity;
+          }
+        }
+
+        result = hil_set_pwm_configuration(heli_q8_DW.HILInitialize_Card,
+          heli_q8_P.HILInitialize_pwm_channels, 8U,
+          (t_pwm_configuration *) &heli_q8_DW.HILInitialize_POModeValues[0],
+          (t_pwm_alignment *) &heli_q8_DW.HILInitialize_POAlignValues[0],
+          (t_pwm_polarity *) &heli_q8_DW.HILInitialize_POPolarityVals[0]);
+        if (result < 0) {
+          msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+            (_rt_error_message));
+          rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+          return;
+        }
+
+        {
+          int_T i1;
+          real_T *dw_POSortedFreqs = &heli_q8_DW.HILInitialize_POSortedFreqs[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_POSortedFreqs[i1] = heli_q8_P.HILInitialize_pwm_leading_deadb;
+          }
+        }
+
+        {
+          int_T i1;
+          real_T *dw_POValues = &heli_q8_DW.HILInitialize_POValues[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_POValues[i1] = heli_q8_P.HILInitialize_pwm_trailing_dead;
+          }
+        }
+
+        result = hil_set_pwm_deadband(heli_q8_DW.HILInitialize_Card,
+          heli_q8_P.HILInitialize_pwm_channels, 8U,
+          &heli_q8_DW.HILInitialize_POSortedFreqs[0],
+          &heli_q8_DW.HILInitialize_POValues[0]);
+        if (result < 0) {
+          msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+            (_rt_error_message));
+          rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+          return;
         }
       }
 
-      result = hil_set_pwm_deadband(heli_q8_DW.HILInitialize_Card,
-        heli_q8_P.HILInitialize_pwm_channels, 8U,
-        &heli_q8_DW.HILInitialize_POSortedFreqs[0],
-        &heli_q8_DW.HILInitialize_POValues[0]);
-      if (result < 0) {
-        msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-          (_rt_error_message));
-        rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-        return;
+      if ((heli_q8_P.HILInitialize_set_pwm_outputs_a && !is_switching) ||
+          (heli_q8_P.HILInitialize_set_pwm_outputs_g && is_switching)) {
+        {
+          int_T i1;
+          real_T *dw_POValues = &heli_q8_DW.HILInitialize_POValues[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_POValues[i1] = heli_q8_P.HILInitialize_initial_pwm_outpu;
+          }
+        }
+
+        result = hil_write_pwm(heli_q8_DW.HILInitialize_Card,
+          heli_q8_P.HILInitialize_pwm_channels, 8U,
+          &heli_q8_DW.HILInitialize_POValues[0]);
+        if (result < 0) {
+          msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+            (_rt_error_message));
+          rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+          return;
+        }
+      }
+
+      if (heli_q8_P.HILInitialize_set_pwm_outputs_o) {
+        {
+          int_T i1;
+          real_T *dw_POValues = &heli_q8_DW.HILInitialize_POValues[0];
+          for (i1=0; i1 < 8; i1++) {
+            dw_POValues[i1] = heli_q8_P.HILInitialize_watchdog_pwm_outp;
+          }
+        }
+
+        result = hil_watchdog_set_pwm_expiration_state
+          (heli_q8_DW.HILInitialize_Card, heli_q8_P.HILInitialize_pwm_channels,
+           8U, &heli_q8_DW.HILInitialize_POValues[0]);
+        if (result < 0) {
+          msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+            (_rt_error_message));
+          rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+          return;
+        }
       }
     }
 
-    if ((heli_q8_P.HILInitialize_set_pwm_outputs_a && !is_switching) ||
-        (heli_q8_P.HILInitialize_set_pwm_outputs_g && is_switching)) {
-      {
-        int_T i1;
-        real_T *dw_POValues = &heli_q8_DW.HILInitialize_POValues[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_POValues[i1] = heli_q8_P.HILInitialize_initial_pwm_outpu;
-        }
-      }
+    /* Start for S-Function (hil_read_encoder_timebase_block): '<S3>/HIL Read Encoder Timebase' */
 
-      result = hil_write_pwm(heli_q8_DW.HILInitialize_Card,
-        heli_q8_P.HILInitialize_pwm_channels, 8U,
-        &heli_q8_DW.HILInitialize_POValues[0]);
-      if (result < 0) {
-        msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-          (_rt_error_message));
-        rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-        return;
-      }
-    }
-
-    if (heli_q8_P.HILInitialize_set_pwm_outputs_o) {
-      {
-        int_T i1;
-        real_T *dw_POValues = &heli_q8_DW.HILInitialize_POValues[0];
-        for (i1=0; i1 < 8; i1++) {
-          dw_POValues[i1] = heli_q8_P.HILInitialize_watchdog_pwm_outp;
-        }
-      }
-
-      result = hil_watchdog_set_pwm_expiration_state
-        (heli_q8_DW.HILInitialize_Card, heli_q8_P.HILInitialize_pwm_channels, 8U,
-         &heli_q8_DW.HILInitialize_POValues[0]);
-      if (result < 0) {
-        msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-          (_rt_error_message));
-        rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-        return;
-      }
-    }
-  }
-
-  /* Start for S-Function (hil_read_encoder_timebase_block): '<S3>/HIL Read Encoder Timebase' */
-
-  /* S-Function Block: heli_q8/Heli 3D/HIL Read Encoder Timebase (hil_read_encoder_timebase_block) */
-  {
-    t_error result;
-    result = hil_task_create_encoder_reader(heli_q8_DW.HILInitialize_Card,
-      heli_q8_P.HILReadEncoderTimebase_samples_,
-      heli_q8_P.HILReadEncoderTimebase_channels, 3,
-      &heli_q8_DW.HILReadEncoderTimebase_Task);
-    if (result < 0) {
-      msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
-        (_rt_error_message));
-      rtmSetErrorStatus(heli_q8_M, _rt_error_message);
-    }
-  }
-
-  /* Start for RateTransition: '<S5>/Rate Transition: x' */
-  heli_q8_B.RateTransitionx = heli_q8_P.RateTransitionx_X0;
-
-  /* Start for RateTransition: '<S5>/Rate Transition: y' */
-  heli_q8_B.RateTransitiony = heli_q8_P.RateTransitiony_X0;
-
-  /* Start for Constant: '<Root>/Constant' */
-  memcpy(&heli_q8_B.Constant[0], &heli_q8_P.A_d[0], 36U * sizeof(real_T));
-
-  /* Start for Constant: '<Root>/Constant1' */
-  memcpy(&heli_q8_B.Constant1[0], &heli_q8_P.B_d[0], 12U * sizeof(real_T));
-
-  /* Start for Constant: '<Root>/Constant2' */
-  memcpy(&heli_q8_B.Constant2[0], &heli_q8_P.Q_d[0], 36U * sizeof(real_T));
-
-  /* Start for S-Function (stream_call_block): '<S4>/Stream Call1' */
-
-  /* S-Function Block: heli_q8/IMU/Stream Call1 (stream_call_block) */
-  {
-    heli_q8_DW.StreamCall1_State = STREAM_CALL_STATE_NOT_CONNECTED;
-    heli_q8_DW.StreamCall1_Stream = NULL;
-  }
-
-  /* Start for S-Function (game_controller_block): '<S5>/Game Controller' */
-
-  /* S-Function Block: heli_q8/Joystick/Game Controller (game_controller_block) */
-  {
-    if (heli_q8_P.GameController_Enabled) {
-      t_double deadzone[6];
-      t_double saturation[6];
-      t_int index;
+    /* S-Function Block: heli_q8/Heli 3D/HIL Read Encoder Timebase (hil_read_encoder_timebase_block) */
+    {
       t_error result;
-      for (index = 0; index < 6; index++) {
-        deadzone[index] = -1;
-      }
-
-      for (index = 0; index < 6; index++) {
-        saturation[index] = -1;
-      }
-
-      result = game_controller_open(heli_q8_P.GameController_ControllerNumber,
-        heli_q8_P.GameController_BufferSize, deadzone, saturation,
-        heli_q8_P.GameController_AutoCenter, 0, 1.0,
-        &heli_q8_DW.GameController_Controller);
+      result = hil_task_create_encoder_reader(heli_q8_DW.HILInitialize_Card,
+        heli_q8_P.HILReadEncoderTimebase_samples_,
+        heli_q8_P.HILReadEncoderTimebase_channels, 3,
+        &heli_q8_DW.HILReadEncoderTimebase_Task);
       if (result < 0) {
         msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
           (_rt_error_message));
         rtmSetErrorStatus(heli_q8_M, _rt_error_message);
       }
     }
+
+    /* Start for RateTransition: '<S5>/Rate Transition: x' */
+    heli_q8_B.RateTransitionx = heli_q8_P.RateTransitionx_X0;
+
+    /* Start for RateTransition: '<S5>/Rate Transition: y' */
+    heli_q8_B.RateTransitiony = heli_q8_P.RateTransitiony_X0;
+
+    /* Start for S-Function (stream_call_block): '<S4>/Stream Call1' */
+
+    /* S-Function Block: heli_q8/IMU/Stream Call1 (stream_call_block) */
+    {
+      heli_q8_DW.StreamCall1_State = STREAM_CALL_STATE_NOT_CONNECTED;
+      heli_q8_DW.StreamCall1_Stream = NULL;
+    }
+
+    /* Start for Triggered SubSystem: '<Root>/Sample and Hold' */
+    /* VirtualOutportStart for Outport: '<S9>/ ' */
+    for (i = 0; i < 5; i++) {
+      heli_q8_B.In[i] = heli_q8_P._Y0;
+    }
+
+    /* End of VirtualOutportStart for Outport: '<S9>/ ' */
+    /* End of Start for SubSystem: '<Root>/Sample and Hold' */
+    /* Start for S-Function (game_controller_block): '<S5>/Game Controller' */
+
+    /* S-Function Block: heli_q8/Joystick/Game Controller (game_controller_block) */
+    {
+      if (heli_q8_P.GameController_Enabled) {
+        t_double deadzone[6];
+        t_double saturation[6];
+        t_int index;
+        t_error result;
+        for (index = 0; index < 6; index++) {
+          deadzone[index] = -1;
+        }
+
+        for (index = 0; index < 6; index++) {
+          saturation[index] = -1;
+        }
+
+        result = game_controller_open(heli_q8_P.GameController_ControllerNumber,
+          heli_q8_P.GameController_BufferSize, deadzone, saturation,
+          heli_q8_P.GameController_AutoCenter, 0, 1.0,
+          &heli_q8_DW.GameController_Controller);
+        if (result < 0) {
+          msg_get_error_messageA(NULL, result, _rt_error_message, sizeof
+            (_rt_error_message));
+          rtmSetErrorStatus(heli_q8_M, _rt_error_message);
+        }
+      }
+    }
+
+    /* Start for ToFile: '<S6>/To File3' */
+    {
+      FILE *fp = (NULL);
+      char fileName[509] = "pitch_imu.mat";
+      if ((fp = fopen(fileName, "wb")) == (NULL)) {
+        rtmSetErrorStatus(heli_q8_M, "Error creating .mat file pitch_imu.mat");
+        return;
+      }
+
+      if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error writing mat file header to file pitch_imu.mat");
+        return;
+      }
+
+      heli_q8_DW.ToFile3_IWORK.Count = 0;
+      heli_q8_DW.ToFile3_IWORK.Decimation = -1;
+      heli_q8_DW.ToFile3_PWORK.FilePtr = fp;
+    }
+
+    /* Start for ToFile: '<S6>/To File4' */
+    {
+      FILE *fp = (NULL);
+      char fileName[509] = "elevation_imu.mat";
+      if ((fp = fopen(fileName, "wb")) == (NULL)) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error creating .mat file elevation_imu.mat");
+        return;
+      }
+
+      if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error writing mat file header to file elevation_imu.mat");
+        return;
+      }
+
+      heli_q8_DW.ToFile4_IWORK.Count = 0;
+      heli_q8_DW.ToFile4_IWORK.Decimation = -1;
+      heli_q8_DW.ToFile4_PWORK.FilePtr = fp;
+    }
+
+    /* Start for ToFile: '<S6>/To File' */
+    {
+      FILE *fp = (NULL);
+      char fileName[509] = "pitch_rate_imu.mat";
+      if ((fp = fopen(fileName, "wb")) == (NULL)) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error creating .mat file pitch_rate_imu.mat");
+        return;
+      }
+
+      if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error writing mat file header to file pitch_rate_imu.mat");
+        return;
+      }
+
+      heli_q8_DW.ToFile_IWORK.Count = 0;
+      heli_q8_DW.ToFile_IWORK.Decimation = -1;
+      heli_q8_DW.ToFile_PWORK.FilePtr = fp;
+    }
+
+    /* Start for ToFile: '<S6>/To File1' */
+    {
+      FILE *fp = (NULL);
+      char fileName[509] = "elevation_rate_imu.mat";
+      if ((fp = fopen(fileName, "wb")) == (NULL)) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error creating .mat file elevation_rate_imu.mat");
+        return;
+      }
+
+      if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error writing mat file header to file elevation_rate_imu.mat");
+        return;
+      }
+
+      heli_q8_DW.ToFile1_IWORK.Count = 0;
+      heli_q8_DW.ToFile1_IWORK.Decimation = -1;
+      heli_q8_DW.ToFile1_PWORK.FilePtr = fp;
+    }
+
+    /* Start for ToFile: '<S6>/To File2' */
+    {
+      FILE *fp = (NULL);
+      char fileName[509] = "travel_rate_imu.mat";
+      if ((fp = fopen(fileName, "wb")) == (NULL)) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error creating .mat file travel_rate_imu.mat");
+        return;
+      }
+
+      if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error writing mat file header to file travel_rate_imu.mat");
+        return;
+      }
+
+      heli_q8_DW.ToFile2_IWORK.Count = 0;
+      heli_q8_DW.ToFile2_IWORK.Decimation = -1;
+      heli_q8_DW.ToFile2_PWORK.FilePtr = fp;
+    }
+
+    /* Start for ToFile: '<S6>/To File5' */
+    {
+      FILE *fp = (NULL);
+      char fileName[509] = "pitch_rate_encoder.mat";
+      if ((fp = fopen(fileName, "wb")) == (NULL)) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error creating .mat file pitch_rate_encoder.mat");
+        return;
+      }
+
+      if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error writing mat file header to file pitch_rate_encoder.mat");
+        return;
+      }
+
+      heli_q8_DW.ToFile5_IWORK.Count = 0;
+      heli_q8_DW.ToFile5_IWORK.Decimation = -1;
+      heli_q8_DW.ToFile5_PWORK.FilePtr = fp;
+    }
+
+    /* Start for ToFile: '<S6>/To File6' */
+    {
+      FILE *fp = (NULL);
+      char fileName[509] = "elevation_rate_encoder.mat";
+      if ((fp = fopen(fileName, "wb")) == (NULL)) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error creating .mat file elevation_rate_encoder.mat");
+        return;
+      }
+
+      if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error writing mat file header to file elevation_rate_encoder.mat");
+        return;
+      }
+
+      heli_q8_DW.ToFile6_IWORK.Count = 0;
+      heli_q8_DW.ToFile6_IWORK.Decimation = -1;
+      heli_q8_DW.ToFile6_PWORK.FilePtr = fp;
+    }
+
+    /* Start for ToFile: '<S6>/To File7' */
+    {
+      FILE *fp = (NULL);
+      char fileName[509] = "travel_rate_encoder.mat";
+      if ((fp = fopen(fileName, "wb")) == (NULL)) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error creating .mat file travel_rate_encoder.mat");
+        return;
+      }
+
+      if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error writing mat file header to file travel_rate_encoder.mat");
+        return;
+      }
+
+      heli_q8_DW.ToFile7_IWORK.Count = 0;
+      heli_q8_DW.ToFile7_IWORK.Decimation = -1;
+      heli_q8_DW.ToFile7_PWORK.FilePtr = fp;
+    }
+
+    /* Start for ToFile: '<S6>/To File8' */
+    {
+      FILE *fp = (NULL);
+      char fileName[509] = "pitch_encoder.mat";
+      if ((fp = fopen(fileName, "wb")) == (NULL)) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error creating .mat file pitch_encoder.mat");
+        return;
+      }
+
+      if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error writing mat file header to file pitch_encoder.mat");
+        return;
+      }
+
+      heli_q8_DW.ToFile8_IWORK.Count = 0;
+      heli_q8_DW.ToFile8_IWORK.Decimation = -1;
+      heli_q8_DW.ToFile8_PWORK.FilePtr = fp;
+    }
+
+    /* Start for ToFile: '<S6>/To File9' */
+    {
+      FILE *fp = (NULL);
+      char fileName[509] = "elevation_encoder.mat";
+      if ((fp = fopen(fileName, "wb")) == (NULL)) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error creating .mat file elevation_encoder.mat");
+        return;
+      }
+
+      if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
+        rtmSetErrorStatus(heli_q8_M,
+                          "Error writing mat file header to file elevation_encoder.mat");
+        return;
+      }
+
+      heli_q8_DW.ToFile9_IWORK.Count = 0;
+      heli_q8_DW.ToFile9_IWORK.Decimation = -1;
+      heli_q8_DW.ToFile9_PWORK.FilePtr = fp;
+    }
   }
 
-  /* Start for ToFile: '<S8>/To File3' */
-  {
-    FILE *fp = (NULL);
-    char fileName[509] = "pitch_imu.mat";
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(heli_q8_M, "Error creating .mat file pitch_imu.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error writing mat file header to file pitch_imu.mat");
-      return;
-    }
-
-    heli_q8_DW.ToFile3_IWORK.Count = 0;
-    heli_q8_DW.ToFile3_IWORK.Decimation = -1;
-    heli_q8_DW.ToFile3_PWORK.FilePtr = fp;
-  }
-
-  /* Start for ToFile: '<S8>/To File4' */
-  {
-    FILE *fp = (NULL);
-    char fileName[509] = "elevation_imu.mat";
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(heli_q8_M, "Error creating .mat file elevation_imu.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error writing mat file header to file elevation_imu.mat");
-      return;
-    }
-
-    heli_q8_DW.ToFile4_IWORK.Count = 0;
-    heli_q8_DW.ToFile4_IWORK.Decimation = -1;
-    heli_q8_DW.ToFile4_PWORK.FilePtr = fp;
-  }
-
-  /* Start for ToFile: '<S8>/To File' */
-  {
-    FILE *fp = (NULL);
-    char fileName[509] = "pitch_rate_imu.mat";
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(heli_q8_M, "Error creating .mat file pitch_rate_imu.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error writing mat file header to file pitch_rate_imu.mat");
-      return;
-    }
-
-    heli_q8_DW.ToFile_IWORK.Count = 0;
-    heli_q8_DW.ToFile_IWORK.Decimation = -1;
-    heli_q8_DW.ToFile_PWORK.FilePtr = fp;
-  }
-
-  /* Start for ToFile: '<S8>/To File1' */
-  {
-    FILE *fp = (NULL);
-    char fileName[509] = "elevation_rate_imu.mat";
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error creating .mat file elevation_rate_imu.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error writing mat file header to file elevation_rate_imu.mat");
-      return;
-    }
-
-    heli_q8_DW.ToFile1_IWORK.Count = 0;
-    heli_q8_DW.ToFile1_IWORK.Decimation = -1;
-    heli_q8_DW.ToFile1_PWORK.FilePtr = fp;
-  }
-
-  /* Start for ToFile: '<S8>/To File2' */
-  {
-    FILE *fp = (NULL);
-    char fileName[509] = "travel_rate_imu.mat";
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error creating .mat file travel_rate_imu.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error writing mat file header to file travel_rate_imu.mat");
-      return;
-    }
-
-    heli_q8_DW.ToFile2_IWORK.Count = 0;
-    heli_q8_DW.ToFile2_IWORK.Decimation = -1;
-    heli_q8_DW.ToFile2_PWORK.FilePtr = fp;
-  }
-
-  /* Start for ToFile: '<S8>/To File5' */
-  {
-    FILE *fp = (NULL);
-    char fileName[509] = "pitch_rate_encoder.mat";
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error creating .mat file pitch_rate_encoder.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error writing mat file header to file pitch_rate_encoder.mat");
-      return;
-    }
-
-    heli_q8_DW.ToFile5_IWORK.Count = 0;
-    heli_q8_DW.ToFile5_IWORK.Decimation = -1;
-    heli_q8_DW.ToFile5_PWORK.FilePtr = fp;
-  }
-
-  /* Start for ToFile: '<S8>/To File6' */
-  {
-    FILE *fp = (NULL);
-    char fileName[509] = "elevation_rate_encoder.mat";
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error creating .mat file elevation_rate_encoder.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error writing mat file header to file elevation_rate_encoder.mat");
-      return;
-    }
-
-    heli_q8_DW.ToFile6_IWORK.Count = 0;
-    heli_q8_DW.ToFile6_IWORK.Decimation = -1;
-    heli_q8_DW.ToFile6_PWORK.FilePtr = fp;
-  }
-
-  /* Start for ToFile: '<S8>/To File7' */
-  {
-    FILE *fp = (NULL);
-    char fileName[509] = "travel_rate_encoder.mat";
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error creating .mat file travel_rate_encoder.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error writing mat file header to file travel_rate_encoder.mat");
-      return;
-    }
-
-    heli_q8_DW.ToFile7_IWORK.Count = 0;
-    heli_q8_DW.ToFile7_IWORK.Decimation = -1;
-    heli_q8_DW.ToFile7_PWORK.FilePtr = fp;
-  }
-
-  /* Start for ToFile: '<S8>/To File8' */
-  {
-    FILE *fp = (NULL);
-    char fileName[509] = "pitch_encoder.mat";
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(heli_q8_M, "Error creating .mat file pitch_encoder.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error writing mat file header to file pitch_encoder.mat");
-      return;
-    }
-
-    heli_q8_DW.ToFile8_IWORK.Count = 0;
-    heli_q8_DW.ToFile8_IWORK.Decimation = -1;
-    heli_q8_DW.ToFile8_PWORK.FilePtr = fp;
-  }
-
-  /* Start for ToFile: '<S8>/To File9' */
-  {
-    FILE *fp = (NULL);
-    char fileName[509] = "elevation_encoder.mat";
-    if ((fp = fopen(fileName, "wb")) == (NULL)) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error creating .mat file elevation_encoder.mat");
-      return;
-    }
-
-    if (rt_WriteMat4FileHeader(fp,2,0,"ans")) {
-      rtmSetErrorStatus(heli_q8_M,
-                        "Error writing mat file header to file elevation_encoder.mat");
-      return;
-    }
-
-    heli_q8_DW.ToFile9_IWORK.Count = 0;
-    heli_q8_DW.ToFile9_IWORK.Decimation = -1;
-    heli_q8_DW.ToFile9_PWORK.FilePtr = fp;
-  }
+  heli_q8_PrevZCX.SampleandHold_Trig_ZCE = POS_ZCSIG;
 
   {
     int32_T i;
 
-    /* InitializeConditions for UnitDelay: '<Root>/Unit Delay' */
-    for (i = 0; i < 6; i++) {
-      heli_q8_DW.UnitDelay_DSTATE[i] = heli_q8_P.UnitDelay_InitialCondition[i];
-    }
+    /* InitializeConditions for RateTransition: '<S5>/Rate Transition: x' */
+    heli_q8_DW.RateTransitionx_Buffer0 = heli_q8_P.RateTransitionx_X0;
 
-    /* End of InitializeConditions for UnitDelay: '<Root>/Unit Delay' */
+    /* InitializeConditions for RateTransition: '<S5>/Rate Transition: y' */
+    heli_q8_DW.RateTransitiony_Buffer0 = heli_q8_P.RateTransitiony_X0;
 
     /* InitializeConditions for TransferFcn: '<S3>/Elevation: Transfer Fcn' */
     heli_q8_X.ElevationTransferFcn_CSTATE = 0.0;
@@ -1833,15 +1862,16 @@ void heli_q8_initialize(void)
     /* InitializeConditions for TransferFcn: '<S3>/Travel: Transfer Fcn' */
     heli_q8_X.TravelTransferFcn_CSTATE = 0.0;
 
-    /* InitializeConditions for UnitDelay: '<Root>/Unit Delay1' */
+    /* InitializeConditions for UnitDelay: '<S8>/Unit Delay' */
+    for (i = 0; i < 6; i++) {
+      heli_q8_DW.UnitDelay_DSTATE[i] = heli_q8_P.UnitDelay_InitialCondition[i];
+    }
+
+    /* End of InitializeConditions for UnitDelay: '<S8>/Unit Delay' */
+
+    /* InitializeConditions for UnitDelay: '<S8>/Unit Delay1' */
     memcpy(&heli_q8_DW.UnitDelay1_DSTATE[0], &heli_q8_P.P_0[0], 36U * sizeof
            (real_T));
-
-    /* InitializeConditions for RateTransition: '<S5>/Rate Transition: x' */
-    heli_q8_DW.RateTransitionx_Buffer0 = heli_q8_P.RateTransitionx_X0;
-
-    /* InitializeConditions for RateTransition: '<S5>/Rate Transition: y' */
-    heli_q8_DW.RateTransitiony_Buffer0 = heli_q8_P.RateTransitiony_X0;
   }
 }
 
@@ -1959,7 +1989,7 @@ void heli_q8_terminate(void)
     }
   }
 
-  /* Terminate for ToFile: '<S8>/To File3' */
+  /* Terminate for ToFile: '<S6>/To File3' */
   {
     FILE *fp = (FILE *) heli_q8_DW.ToFile3_PWORK.FilePtr;
     if (fp != (NULL)) {
@@ -1989,7 +2019,7 @@ void heli_q8_terminate(void)
     }
   }
 
-  /* Terminate for ToFile: '<S8>/To File4' */
+  /* Terminate for ToFile: '<S6>/To File4' */
   {
     FILE *fp = (FILE *) heli_q8_DW.ToFile4_PWORK.FilePtr;
     if (fp != (NULL)) {
@@ -2020,7 +2050,7 @@ void heli_q8_terminate(void)
     }
   }
 
-  /* Terminate for ToFile: '<S8>/To File' */
+  /* Terminate for ToFile: '<S6>/To File' */
   {
     FILE *fp = (FILE *) heli_q8_DW.ToFile_PWORK.FilePtr;
     if (fp != (NULL)) {
@@ -2050,7 +2080,7 @@ void heli_q8_terminate(void)
     }
   }
 
-  /* Terminate for ToFile: '<S8>/To File1' */
+  /* Terminate for ToFile: '<S6>/To File1' */
   {
     FILE *fp = (FILE *) heli_q8_DW.ToFile1_PWORK.FilePtr;
     if (fp != (NULL)) {
@@ -2083,7 +2113,7 @@ void heli_q8_terminate(void)
     }
   }
 
-  /* Terminate for ToFile: '<S8>/To File2' */
+  /* Terminate for ToFile: '<S6>/To File2' */
   {
     FILE *fp = (FILE *) heli_q8_DW.ToFile2_PWORK.FilePtr;
     if (fp != (NULL)) {
@@ -2116,7 +2146,7 @@ void heli_q8_terminate(void)
     }
   }
 
-  /* Terminate for ToFile: '<S8>/To File5' */
+  /* Terminate for ToFile: '<S6>/To File5' */
   {
     FILE *fp = (FILE *) heli_q8_DW.ToFile5_PWORK.FilePtr;
     if (fp != (NULL)) {
@@ -2149,7 +2179,7 @@ void heli_q8_terminate(void)
     }
   }
 
-  /* Terminate for ToFile: '<S8>/To File6' */
+  /* Terminate for ToFile: '<S6>/To File6' */
   {
     FILE *fp = (FILE *) heli_q8_DW.ToFile6_PWORK.FilePtr;
     if (fp != (NULL)) {
@@ -2182,7 +2212,7 @@ void heli_q8_terminate(void)
     }
   }
 
-  /* Terminate for ToFile: '<S8>/To File7' */
+  /* Terminate for ToFile: '<S6>/To File7' */
   {
     FILE *fp = (FILE *) heli_q8_DW.ToFile7_PWORK.FilePtr;
     if (fp != (NULL)) {
@@ -2215,7 +2245,7 @@ void heli_q8_terminate(void)
     }
   }
 
-  /* Terminate for ToFile: '<S8>/To File8' */
+  /* Terminate for ToFile: '<S6>/To File8' */
   {
     FILE *fp = (FILE *) heli_q8_DW.ToFile8_PWORK.FilePtr;
     if (fp != (NULL)) {
@@ -2246,7 +2276,7 @@ void heli_q8_terminate(void)
     }
   }
 
-  /* Terminate for ToFile: '<S8>/To File9' */
+  /* Terminate for ToFile: '<S6>/To File9' */
   {
     FILE *fp = (FILE *) heli_q8_DW.ToFile9_PWORK.FilePtr;
     if (fp != (NULL)) {
@@ -2422,15 +2452,15 @@ RT_MODEL_heli_q8_T *heli_q8(void)
   heli_q8_M->Timing.stepSize2 = 0.01;
 
   /* External mode info */
-  heli_q8_M->Sizes.checksums[0] = (857657022U);
-  heli_q8_M->Sizes.checksums[1] = (2460741965U);
-  heli_q8_M->Sizes.checksums[2] = (618734350U);
-  heli_q8_M->Sizes.checksums[3] = (3258423836U);
+  heli_q8_M->Sizes.checksums[0] = (215414657U);
+  heli_q8_M->Sizes.checksums[1] = (2921301125U);
+  heli_q8_M->Sizes.checksums[2] = (2406009898U);
+  heli_q8_M->Sizes.checksums[3] = (1630386560U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
     static RTWExtModeInfo rt_ExtModeInfo;
-    static const sysRanDType *systemRan[5];
+    static const sysRanDType *systemRan[6];
     heli_q8_M->extModeInfo = (&rt_ExtModeInfo);
     rteiSetSubSystemActiveVectorAddresses(&rt_ExtModeInfo, systemRan);
     systemRan[0] = &rtAlwaysEnabled;
@@ -2438,6 +2468,7 @@ RT_MODEL_heli_q8_T *heli_q8(void)
     systemRan[2] = &rtAlwaysEnabled;
     systemRan[3] = &rtAlwaysEnabled;
     systemRan[4] = &rtAlwaysEnabled;
+    systemRan[5] = (sysRanDType *)&heli_q8_DW.SampleandHold_SubsysRanBC;
     rteiSetModelMappingInfoPtr(heli_q8_M->extModeInfo,
       &heli_q8_M->SpecialInfo.mappingInfo);
     rteiSetChecksumsPtr(heli_q8_M->extModeInfo, heli_q8_M->Sizes.checksums);
@@ -2460,24 +2491,12 @@ RT_MODEL_heli_q8_T *heli_q8(void)
       heli_q8_B.UnitDelay[i] = 0.0;
     }
 
-    for (i = 0; i < 36; i++) {
-      heli_q8_B.UnitDelay1[i] = 0.0;
-    }
-
     for (i = 0; i < 6; i++) {
-      heli_q8_B.Gain[i] = 0.0;
+      heli_q8_B.Gain_d[i] = 0.0;
     }
 
-    for (i = 0; i < 36; i++) {
-      heli_q8_B.Constant[i] = 0.0;
-    }
-
-    for (i = 0; i < 12; i++) {
-      heli_q8_B.Constant1[i] = 0.0;
-    }
-
-    for (i = 0; i < 36; i++) {
-      heli_q8_B.Constant2[i] = 0.0;
+    for (i = 0; i < 5; i++) {
+      heli_q8_B.In[i] = 0.0;
     }
 
     for (i = 0; i < 6; i++) {
@@ -2488,37 +2507,32 @@ RT_MODEL_heli_q8_T *heli_q8(void)
       heli_q8_B.P_bar_k_plus_1[i] = 0.0;
     }
 
-    heli_q8_B.ElevationCounttorad = 0.0;
-    heli_q8_B.Add = 0.0;
-    heli_q8_B.ElevationTransferFcn = 0.0;
-    heli_q8_B.PitchCounttorad = 0.0;
-    heli_q8_B.PitchTransferFcn = 0.0;
-    heli_q8_B.TravelCounttorad = 0.0;
-    heli_q8_B.TravelTransferFcn = 0.0;
     heli_q8_B.RateTransitionx = 0.0;
     heli_q8_B.Joystick_gain_x = 0.0;
     heli_q8_B.RateTransitiony = 0.0;
     heli_q8_B.Joystick_gain_y = 0.0;
-    heli_q8_B.Gain_d[0] = 0.0;
-    heli_q8_B.Gain_d[1] = 0.0;
-    heli_q8_B.Sum1[0] = 0.0;
-    heli_q8_B.Sum1[1] = 0.0;
-    heli_q8_B.Constant2_k = 0.0;
     heli_q8_B.Gain1[0] = 0.0;
     heli_q8_B.Gain1[1] = 0.0;
     heli_q8_B.Gain1[2] = 0.0;
-    heli_q8_B.FrontmotorSaturation = 0.0;
-    heli_q8_B.BackmotorSaturation = 0.0;
+    heli_q8_B.PitchCounttorad = 0.0;
+    heli_q8_B.ElevationCounttorad = 0.0;
+    heli_q8_B.Add = 0.0;
+    heli_q8_B.TravelCounttorad = 0.0;
     heli_q8_B.Gain2[0] = 0.0;
     heli_q8_B.Gain2[1] = 0.0;
     heli_q8_B.Gain2[2] = 0.0;
-    heli_q8_B.GameController_o4 = 0.0;
-    heli_q8_B.GameController_o5 = 0.0;
     heli_q8_B.TrigonometricFunction = 0.0;
     heli_q8_B.e = 0.0;
+    heli_q8_B.Sum1[0] = 0.0;
+    heli_q8_B.Sum1[1] = 0.0;
+    heli_q8_B.ElevationTransferFcn = 0.0;
+    heli_q8_B.PitchTransferFcn = 0.0;
+    heli_q8_B.TravelTransferFcn = 0.0;
+    heli_q8_B.GameController_o4 = 0.0;
+    heli_q8_B.GameController_o5 = 0.0;
     heli_q8_B.Gain1_f = 0.0;
     heli_q8_B.Gain2_p = 0.0;
-    heli_q8_B.Gain_g = 0.0;
+    heli_q8_B.Gain = 0.0;
     heli_q8_B.euler_rates[0] = 0.0;
     heli_q8_B.euler_rates[1] = 0.0;
     heli_q8_B.euler_rates[2] = 0.0;
@@ -2639,9 +2653,9 @@ RT_MODEL_heli_q8_T *heli_q8(void)
   heli_q8_M->Sizes.numU = (0);         /* Number of model inputs */
   heli_q8_M->Sizes.sysDirFeedThru = (0);/* The model is not direct feedthrough */
   heli_q8_M->Sizes.numSampTimes = (3); /* Number of sample times */
-  heli_q8_M->Sizes.numBlocks = (119);  /* Number of blocks */
-  heli_q8_M->Sizes.numBlockIO = (35);  /* Number of block outputs */
-  heli_q8_M->Sizes.numBlockPrms = (564);/* Sum of parameter "widths" */
+  heli_q8_M->Sizes.numBlocks = (121);  /* Number of blocks */
+  heli_q8_M->Sizes.numBlockIO = (28);  /* Number of block outputs */
+  heli_q8_M->Sizes.numBlockPrms = (565);/* Sum of parameter "widths" */
   return heli_q8_M;
 }
 

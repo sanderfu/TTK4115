@@ -13,8 +13,8 @@
 
 %%%%%%%%%%% Calibration of the encoder and the hardware for the specific
 %%%%%%%%%%% helicopter
-Joystick_gain_x = 1;
-Joystick_gain_y = 1;
+Joystick_gain_x = 0.5;
+Joystick_gain_y = 0.5;
 
 
 %%%%%%%%%%% Physical constants

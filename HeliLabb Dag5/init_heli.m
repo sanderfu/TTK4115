@@ -13,12 +13,12 @@
 
 %%%%%%%%%%% Calibration of the encoder and the hardware for the specific
 %%%%%%%%%%% helicopter
-Joystick_gain_x = 1;
-Joystick_gain_y = 1;
+Joystick_gain_x = 0.5;
+Joystick_gain_y = 0.5;
 
 
 %%%%%%%%%%% Physical constants
-g = 9.81; % gravitational constant [m/s^2]
+g = 9.81; % gravitational constant [m/s^2] 
 l_c = 0.46; % distance elevation axis to counterweight [m]
 l_h = 0.66; % distance elevation axis to helicopter head [m]
 l_p = 0.175; % distance pitch axis to motor [m]

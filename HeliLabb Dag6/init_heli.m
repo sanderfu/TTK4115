@@ -56,9 +56,6 @@ R = [r1 0; 0 r2];
 
 C = [1 0 0; 0 0 1];
 
-
-
-
 K = lqr(A,B,Q,R);
 F = inv(C*inv(B*K-A)*B);
 

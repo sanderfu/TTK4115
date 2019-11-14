@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.131
+ * Model version              : 1.133
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Wed Nov 13 20:02:25 2019
+ * C source code generated on : Thu Nov 14 00:57:17 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -365,6 +365,9 @@ P_heli_q8_T heli_q8_P = {
                                         * Referenced by: '<S1>/elevation_rate '
                                         */
   1.0,                                 /* Expression: 1
+                                        * Referenced by: '<S1>/travel '
+                                        */
+  1.0,                                 /* Expression: 1
                                         * Referenced by: '<S1>/travel_rate '
                                         */
   0.0,                                 /* Expression: 0
@@ -403,9 +406,6 @@ P_heli_q8_T heli_q8_P = {
   1.1111111111111112,                  /* Expression: 10/9
                                         * Referenced by: '<S10>/Gain: x'
                                         */
-  1.0,                                 /* Expression: 1
-                                        * Referenced by: '<S1>/travel '
-                                        */
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S3>/Unit Delay2'
                                         */
@@ -415,49 +415,49 @@ P_heli_q8_T heli_q8_P = {
    */
   { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
   1.0,                                 /* Expression: 1
-                                        * Referenced by: '<S14>/pitch e'
+                                        * Referenced by: '<S13>/pitch e'
                                         */
   1.0,                                 /* Expression: 1
-                                        * Referenced by: '<S14>/pitch rate e'
+                                        * Referenced by: '<S13>/pitch rate e'
                                         */
   1.0,                                 /* Expression: 1
-                                        * Referenced by: '<S14>/travel encoder'
+                                        * Referenced by: '<S13>/travel encoder'
                                         */
   1.0,                                 /* Expression: 1
-                                        * Referenced by: '<S14>/travel rate encoder'
+                                        * Referenced by: '<S13>/travel rate encoder'
                                         */
   1.0,                                 /* Expression: 1
-                                        * Referenced by: '<S14>/elevation e'
+                                        * Referenced by: '<S13>/elevation e'
                                         */
   1.0,                                 /* Expression: 1
-                                        * Referenced by: '<S14>/elevation rate e'
+                                        * Referenced by: '<S13>/elevation rate e'
                                         */
   1.0,                                 /* Expression: 1
-                                        * Referenced by: '<S14>/travel e'
+                                        * Referenced by: '<S13>/travel e'
                                         */
   1.0,                                 /* Expression: 1
-                                        * Referenced by: '<S14>/travel rate e'
+                                        * Referenced by: '<S13>/travel rate e'
                                         */
   1.0,                                 /* Expression: 1
-                                        * Referenced by: '<S14>/pitch encoder'
+                                        * Referenced by: '<S13>/pitch encoder'
                                         */
   1.0,                                 /* Expression: 1
-                                        * Referenced by: '<S14>/pitch rate encoder'
+                                        * Referenced by: '<S13>/pitch rate encoder'
                                         */
   1.0,                                 /* Expression: 1
-                                        * Referenced by: '<S14>/elevation encoder'
+                                        * Referenced by: '<S13>/elevation encoder'
                                         */
   1.0,                                 /* Expression: 1
-                                        * Referenced by: '<S14>/elevation rate encoder'
+                                        * Referenced by: '<S13>/elevation rate encoder'
                                         */
 
   /*  Expression: [1; 1; 1; 1; 1; 1]
-   * Referenced by: '<S14>/Gain'
+   * Referenced by: '<S13>/Gain'
    */
   { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 },
 
   /*  Expression: [1; 1; 1; 1; 1; 1]
-   * Referenced by: '<S14>/Gain1'
+   * Referenced by: '<S13>/Gain1'
    */
   { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 },
   0.0,                                 /* Expression: NaN
@@ -497,8 +497,14 @@ P_heli_q8_T heli_q8_P = {
    * Referenced by: '<S16>/Gain2'
    */
   { 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0 },
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<S7>/Memory'
+  -50.0,                               /* Computed Parameter: PitchTransferFcn_A
+                                        * Referenced by: '<S12>/Pitch: Transfer Fcn'
+                                        */
+  -2500.0,                             /* Computed Parameter: PitchTransferFcn_C
+                                        * Referenced by: '<S12>/Pitch: Transfer Fcn'
+                                        */
+  50.0,                                /* Computed Parameter: PitchTransferFcn_D
+                                        * Referenced by: '<S12>/Pitch: Transfer Fcn'
                                         */
   -50.0,                               /* Computed Parameter: ElevationTransferFcn_A
                                         * Referenced by: '<S12>/Elevation: Transfer Fcn'
@@ -509,15 +515,6 @@ P_heli_q8_T heli_q8_P = {
   50.0,                                /* Computed Parameter: ElevationTransferFcn_D
                                         * Referenced by: '<S12>/Elevation: Transfer Fcn'
                                         */
-  -50.0,                               /* Computed Parameter: PitchTransferFcn_A
-                                        * Referenced by: '<S12>/Pitch: Transfer Fcn'
-                                        */
-  -2500.0,                             /* Computed Parameter: PitchTransferFcn_C
-                                        * Referenced by: '<S12>/Pitch: Transfer Fcn'
-                                        */
-  50.0,                                /* Computed Parameter: PitchTransferFcn_D
-                                        * Referenced by: '<S12>/Pitch: Transfer Fcn'
-                                        */
   -50.0,                               /* Computed Parameter: TravelTransferFcn_A
                                         * Referenced by: '<S12>/Travel: Transfer Fcn'
                                         */
@@ -526,6 +523,9 @@ P_heli_q8_T heli_q8_P = {
                                         */
   50.0,                                /* Computed Parameter: TravelTransferFcn_D
                                         * Referenced by: '<S12>/Travel: Transfer Fcn'
+                                        */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<S7>/Memory'
                                         */
   5.0,                                 /* Expression: 5
                                         * Referenced by: '<S12>/Front motor: Saturation'

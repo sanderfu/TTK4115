@@ -32,7 +32,7 @@ k_1 = k_f/(2*m_p*l_p); %
 k_2 = (l_h*k_f)/(m_c*l_c^2+2*m_p*l_h^2); 
 k_3 = (v_s0*l_h*k_f)/(m_c*l_c^2+2*m_p*(l_h^2+l_p^2));
 
-% problem_to_run=input('What problem to run?');
+problem_to_run=input('What problem to run?');
 
 k_pp=0;
 k_pd=0;
@@ -70,19 +70,19 @@ k_pd=0;
 % line([0,0], ylim, 'Color', 'k', 'LineWidth', 1); %Y_axis
 % line(xlim, [0,0], 'Color', 'k', 'LineWidth', 1); %X-axis 
 
-% if problem_to_run==2
-%     fprintf('Running problem 2\n');
-%     k_pp=input('Value for k_pp: ');
-%     k_pd=input('Value for k_pd: ');
-% elseif problem_to_run==3
-%     fprintf('Running problem 3\n');
-%     omega_0 = input('Value for omega_0: ');
-%     zeta = input('Value for zeta: ');
-%     k_pp = omega_0^2/k_1;
-%     k_pd = (2*zeta*omega_0)/k_1;
-% else
-%     fprintf('No valid porblem\n');
-% end
+if problem_to_run==2
+    fprintf('Running problem 2\n');
+    k_pp=input('Value for k_pp: ');
+    k_pd=input('Value for k_pd: ');
+elseif problem_to_run==3
+    fprintf('Running problem 3\n');
+    omega_0 = input('Value for omega_0: ');
+    zeta = input('Value for zeta: ');
+    k_pp = omega_0^2/k_1;
+    k_pd = (2*zeta*omega_0)/k_1;
+else
+    fprintf('No valid porblem\n');
+end
 
 
 

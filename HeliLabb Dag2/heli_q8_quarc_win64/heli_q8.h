@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.63
+ * Model version              : 1.64
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Wed Nov 13 21:42:58 2019
+ * C source code generated on : Thu Nov 14 01:16:47 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -1215,7 +1215,7 @@ struct P_heli_q8_T_ {
   real_T PitchCounttorad_Gain;         /* Expression: -2*pi /4096
                                         * Referenced by: '<S4>/Pitch: Count to rad'
                                         */
-  real_T elevationoffset_Value;        /* Expression: 0
+  real_T elevationoffset_Value;        /* Expression: -0.515
                                         * Referenced by: '<Root>/elevation offset'
                                         */
   real_T ElevationCounttorad_Gain;     /* Expression: -2 * pi /4096

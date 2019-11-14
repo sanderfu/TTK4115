@@ -7,9 +7,9 @@
  *
  * Code generation for model "heli_q8".
  *
- * Model version              : 1.72
+ * Model version              : 1.73
  * Simulink Coder version : 8.9 (R2015b) 13-Aug-2015
- * C source code generated on : Sun Nov 10 20:50:03 2019
+ * C source code generated on : Thu Nov 14 01:25:57 2019
  *
  * Target selection: quarc_win64.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -23,11 +23,27 @@
 
 /* Block parameters (auto storage) */
 P_heli_q8_T heli_q8_P = {
+  /*  Variable: F_aug
+   * Referenced by: '<S7>/Gain'
+   */
+  { -1.4254999115429019E-16, 12.769674757744156, 11.141989712813794,
+    -3.9073794431760528E-16 },
   1.0,                                 /* Variable: Joystick_gain_x
                                         * Referenced by: '<S6>/Joystick_gain_x'
                                         */
   1.0,                                 /* Variable: Joystick_gain_y
                                         * Referenced by: '<S6>/Joystick_gain_y'
+                                        */
+
+  /*  Variable: K_aug
+   * Referenced by: '<S7>/Gain1'
+   */
+  { -1.4254999115429019E-16, 12.769674757744156, -6.2878830441227111E-17,
+    7.0508358928651811, 11.141989712813794, -3.9073794431760533E-16,
+    -6.0051792991877893E-17, 4.4721359549995761, 1.0000000000000007,
+    3.0868711143172936E-16 },
+  7.7,                                 /* Variable: v_s0
+                                        * Referenced by: '<S7>/Constant2'
                                         */
   10.0,                                /* Mask Parameter: HILInitialize_analog_input_maxi
                                         * Referenced by: '<Root>/HIL Initialize'
@@ -247,6 +263,9 @@ P_heli_q8_T heli_q8_P = {
   0,                                   /* Mask Parameter: HILInitialize_set_pwm_params__f
                                         * Referenced by: '<Root>/HIL Initialize'
                                         */
+  -1.0,                                /* Expression: -1
+                                        * Referenced by: '<S2>/Gain'
+                                        */
   0.0,                                 /* Expression: NaN
                                         * Referenced by: '<S5>/Constant2'
                                         */
@@ -255,42 +274,6 @@ P_heli_q8_T heli_q8_P = {
                                         */
   0.0,                                 /* Expression: initCond
                                         * Referenced by: '<S9>/ '
-                                        */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<S6>/Rate Transition: y'
-                                        */
-  -0.1,                                /* Expression: -0.1
-                                        * Referenced by: '<S6>/Dead Zone: y'
-                                        */
-  0.1,                                 /* Expression: 0.1
-                                        * Referenced by: '<S6>/Dead Zone: y'
-                                        */
-  1.1111111111111112,                  /* Expression: 10/9
-                                        * Referenced by: '<S6>/Gain: y'
-                                        */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<S6>/Rate Transition: x'
-                                        */
-  -0.1,                                /* Expression: -0.1
-                                        * Referenced by: '<S6>/Dead Zone: x'
-                                        */
-  0.1,                                 /* Expression: 0.1
-                                        * Referenced by: '<S6>/Dead Zone: x'
-                                        */
-  1.1111111111111112,                  /* Expression: 10/9
-                                        * Referenced by: '<S6>/Gain: x'
-                                        */
-  -0.515,                              /* Expression: -0.515
-                                        * Referenced by: '<Root>/elevation offset'
-                                        */
-  -0.0015339807878856412,              /* Expression: -2 * pi /4096
-                                        * Referenced by: '<S4>/Elevation: Count to rad'
-                                        */
-  0.5,                                 /* Expression: 0.5
-                                        * Referenced by: '<S1>/Back gain'
-                                        */
-  0.5,                                 /* Expression: 0.5
-                                        * Referenced by: '<S1>/Front gain'
                                         */
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S5>/Constant'
@@ -306,8 +289,73 @@ P_heli_q8_T heli_q8_P = {
   -0.0015339807878856412,              /* Expression: -2*pi /4096
                                         * Referenced by: '<S4>/Pitch: Count to rad'
                                         */
+  -0.515,                              /* Expression: -0.515
+                                        * Referenced by: '<Root>/elevation offset'
+                                        */
+  -0.0015339807878856412,              /* Expression: -2 * pi /4096
+                                        * Referenced by: '<S4>/Elevation: Count to rad'
+                                        */
   0.00076699039394282058,              /* Expression: 2*pi/8192
                                         * Referenced by: '<S4>/Travel: Count to rad'
+                                        */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<S6>/Rate Transition: y'
+                                        */
+  -0.1,                                /* Expression: -0.1
+                                        * Referenced by: '<S6>/Dead Zone: y'
+                                        */
+  0.1,                                 /* Expression: 0.1
+                                        * Referenced by: '<S6>/Dead Zone: y'
+                                        */
+  1.1111111111111112,                  /* Expression: 10/9
+                                        * Referenced by: '<S6>/Gain: y'
+                                        */
+
+  /*  Expression: [ 0, 0, 1; 0, 1, 0; -1, 0, 0]
+   * Referenced by: '<S5>/Gain2'
+   */
+  { 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0 },
+  0.5,                                 /* Expression: 0.5
+                                        * Referenced by: '<S2>/Pulse Generator'
+                                        */
+  20000.0,                             /* Computed Parameter: PulseGenerator_Period
+                                        * Referenced by: '<S2>/Pulse Generator'
+                                        */
+  10000.0,                             /* Computed Parameter: PulseGenerator_Duty
+                                        * Referenced by: '<S2>/Pulse Generator'
+                                        */
+  10.0,                                /* Expression: 10
+                                        * Referenced by: '<S2>/Pulse Generator'
+                                        */
+  0.5,                                 /* Expression: 0.5
+                                        * Referenced by: '<S2>/Pulse Generator1'
+                                        */
+  20000.0,                             /* Computed Parameter: PulseGenerator1_Period
+                                        * Referenced by: '<S2>/Pulse Generator1'
+                                        */
+  10000.0,                             /* Computed Parameter: PulseGenerator1_Duty
+                                        * Referenced by: '<S2>/Pulse Generator1'
+                                        */
+  30.0,                                /* Expression: 30
+                                        * Referenced by: '<S2>/Pulse Generator1'
+                                        */
+  1.0,                                 /* Expression: 1
+                                        * Referenced by: '<S2>/Enable pitch square'
+                                        */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<S2>/Switch'
+                                        */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<S7>/Integrator'
+                                        */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<S7>/Integrator1'
+                                        */
+  0.5,                                 /* Expression: 0.5
+                                        * Referenced by: '<S1>/Back gain'
+                                        */
+  0.5,                                 /* Expression: 0.5
+                                        * Referenced by: '<S1>/Front gain'
                                         */
   -50.0,                               /* Computed Parameter: ElevationTransferFcn_A
                                         * Referenced by: '<S4>/Elevation: Transfer Fcn'
@@ -348,16 +396,17 @@ P_heli_q8_T heli_q8_P = {
   -5.0,                                /* Expression: -5
                                         * Referenced by: '<S4>/Back motor: Saturation'
                                         */
-
-  /*  Expression: [ 0, 0, 1; 0, 1, 0; -1, 0, 0]
-   * Referenced by: '<S5>/Gain2'
-   */
-  { 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0 },
   0.0,                                 /* Expression: 0
-                                        * Referenced by: '<S7>/Integrator'
+                                        * Referenced by: '<S6>/Rate Transition: x'
                                         */
-  0.0,                                 /* Expression: 0
-                                        * Referenced by: '<S7>/Integrator1'
+  -0.1,                                /* Expression: -0.1
+                                        * Referenced by: '<S6>/Dead Zone: x'
+                                        */
+  0.1,                                 /* Expression: 0.1
+                                        * Referenced by: '<S6>/Dead Zone: x'
+                                        */
+  1.1111111111111112,                  /* Expression: 10/9
+                                        * Referenced by: '<S6>/Gain: x'
                                         */
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S10>/Gain1'
